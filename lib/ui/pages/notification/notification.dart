@@ -22,12 +22,6 @@ class _ZCLNotificationPageState extends State<ZCLNotificationPage> {
   double _percent = 0;
   PageController _pageController;
 
-  Widget _underline = DecoratedBox(
-    decoration:BoxDecoration(
-        border:Border.all(color: Colors.grey[200],width: 1.0)
-    ),
-  );
-
   @override
   void initState() {
     super.initState();
