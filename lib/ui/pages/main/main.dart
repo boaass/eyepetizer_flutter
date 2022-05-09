@@ -21,9 +21,9 @@ class _ZCLMainPageState extends State<ZCLMainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("eyepetizer", style: Theme.of(context).textTheme.headline3,),
-      ),
+      // appBar: AppBar(
+      //   title: Text("eyepetizer", style: Theme.of(context).textTheme.headline3,),
+      // ),
       body: IndexedStack(
         index: _currentIndex,
         children: pages,

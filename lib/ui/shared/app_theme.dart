@@ -10,6 +10,8 @@ class ZCLAppTheme {
 
   static final Color norTextColors = Colors.black;
 
+  static final titleFontStyle = TextStyle(fontFamily: "Lobster");
+
 
   static final MaterialColor white = const MaterialColor(
     0xFFFFFFFF,
