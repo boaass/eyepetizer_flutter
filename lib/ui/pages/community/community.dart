@@ -4,7 +4,7 @@ class ZCLCommunityPage extends StatelessWidget {
 
   static const String routeName = "/community";
 
-  const ZCLCommunityPage({Key key}) : super(key: key);
+  const ZCLCommunityPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

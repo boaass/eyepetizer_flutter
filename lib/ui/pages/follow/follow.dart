@@ -1,24 +1,23 @@
-import 'package:eyepetizer/core/viewmodel/daily.dart';
+import 'package:eyepetizer/core/viewmodel/follow_view_model.dart';
 import 'package:eyepetizer/ui/widgets/card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:eyepetizer/core/extention/num_extention.dart';
 
 
-class ZCLDailyPage extends StatefulWidget {
+class ZCLFollowPage extends StatefulWidget {
 
-  static const String routeName = "/daily";
+  static const String routeName = "/focus";
 
-  const ZCLDailyPage({Key? key}) : super(key: key);
+  const ZCLFollowPage({Key? key}) : super(key: key);
 
   @override
-  _ZCLDailyPageState createState() => _ZCLDailyPageState();
+  _ZCLFollowPageState createState() => _ZCLFollowPageState();
 }
 
-class _ZCLDailyPageState extends State<ZCLDailyPage> {
+class _ZCLFollowPageState extends State<ZCLFollowPage> {
   ScrollController _scrollController = ScrollController();
   bool _isLoading = true;
-  late ZCLDailyViewModel _viewModel;
+  late ZCLFollowViewModel _viewModel;
 
   @override
   void initState() {
@@ -39,32 +38,29 @@ class _ZCLDailyPageState extends State<ZCLDailyPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ZCLDailyViewModel>(
-        builder: (ctx, dailyVM, child) {
-          _viewModel = dailyVM;
+    return Consumer<ZCLFollowViewModel>(
+        builder: (ctx, followVM, child) {
+          _viewModel = followVM;
           _isLoading = false;
-          if (dailyVM.cardPageModel.cards == null) {
+          if (followVM.cardPageModel.cards == null) {
             return Container(height: 1,);
           }
           return RefreshIndicator(
             color: Colors.black,
             onRefresh: (){
-              return dailyVM.update();
+              return followVM.update();
             },
             child: ListView.builder(
               controller: _scrollController,
               shrinkWrap: true,
               itemBuilder: (ctx, index) {
-                List? metros = dailyVM.cardPageModel.cards?[index].body!.metro_list;
+                List? metros = followVM.cardPageModel.cards?[index].body!.metro_list;
                 if (metros == null || metros.length == 0) {
                   return Container(height: 1);
                 }
-                return Padding(
-                  padding: EdgeInsets.only(top: 5.px),
-                  child: ZCLCardWidget(model: dailyVM.cardPageModel.cards![index],),
-                );
+                return ZCLCardWidget(model: followVM.cardPageModel.cards![index],);
               },
-              itemCount: dailyVM.cardPageModel.cards!.length,
+              itemCount: followVM.cardPageModel.cards!.length,
             ),
           );
         }

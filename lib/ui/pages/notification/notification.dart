@@ -9,7 +9,7 @@ class ZCLNotificationPage extends StatefulWidget {
 
   static const String routeName = "/notification";
 
-  const ZCLNotificationPage({Key key}) : super(key: key);
+  const ZCLNotificationPage({Key? key}) : super(key: key);
 
   @override
   _ZCLNotificationPageState createState() => _ZCLNotificationPageState();
@@ -20,16 +20,16 @@ class _ZCLNotificationPageState extends State<ZCLNotificationPage> {
   List _appBarTitles = ["互动", "消息"];
   int _currentPageIndex = 0;
   double _percent = 0;
-  PageController _pageController;
+  PageController? _pageController;
 
   @override
   void initState() {
     super.initState();
 
     _pageController = PageController();
-    _pageController.addListener(() {
-      final offset = _pageController.offset;
-      _percent = offset/ZCLSizeFit.screenWidth;
+    _pageController?.addListener(() {
+      final offset = _pageController?.offset;
+      _percent = offset!/ZCLSizeFit.screenWidth!;
       setState(() {
         if (_percent < 0) {
           _percent = 0;
@@ -94,11 +94,11 @@ class _ZCLNotificationPageState extends State<ZCLNotificationPage> {
 
   _buildAppBarTitle() {
     return _appBarTitles.asMap().keys.map<Widget>((index) => _buildAppBarTitleItem(_appBarTitles[index], _currentPageIndex == index, (){
-      _pageController.animateToPage(index, duration: Duration(milliseconds: 400), curve: Curves.linear);
+      _pageController?.animateToPage(index, duration: Duration(milliseconds: 400), curve: Curves.linear);
     })).toList();
   }
 
-  _buildAppBarTitleItem(String title, bool isSelected, Function onTap) {
+  _buildAppBarTitleItem(String title, bool isSelected, Function()? onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(

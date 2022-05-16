@@ -5,7 +5,7 @@ class ZCLMyPage extends StatelessWidget {
 
   static const String routeName = "/my";
 
-  const ZCLMyPage({Key key}) : super(key: key);
+  const ZCLMyPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

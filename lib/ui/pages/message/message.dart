@@ -5,7 +5,7 @@ class ZCLMessagePage extends StatelessWidget {
   
   static const String routeName = "/message";
   
-  const ZCLMessagePage({Key key}) : super(key: key);
+  const ZCLMessagePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

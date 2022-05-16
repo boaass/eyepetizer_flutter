@@ -1,7 +1,7 @@
 import 'package:eyepetizer/ui/pages/community/community.dart';
 import 'package:eyepetizer/ui/pages/daily/daily.dart';
 import 'package:eyepetizer/ui/pages/discovery/discovery.dart';
-import 'package:eyepetizer/ui/pages/focus/focus.dart';
+import 'package:eyepetizer/ui/pages/follow/follow.dart';
 import 'package:eyepetizer/ui/pages/home/home.dart';
 import 'package:eyepetizer/ui/pages/interact/interact.dart';
 import 'package:eyepetizer/ui/pages/main/main.dart';
@@ -21,7 +21,7 @@ class ZCLRouter {
     ZCLDiscoveryPage.routeName: (ctx) => ZCLDiscoveryPage(),
     ZCLMyPage.routeName: (ctx) => ZCLMyPage(),
     ZCLRecommendPage.routeName: (ctx) => ZCLRecommendPage(),
-    ZCLFocusPage.routeName: (ctx) => ZCLFocusPage(),
+    ZCLFollowPage.routeName: (ctx) => ZCLFollowPage(),
     ZCLDailyPage.routeName: (ctx) => ZCLDailyPage(),
     ZCLNotificationPage.routeName: (ctx) => ZCLNotificationPage(),
     ZCLInteractPage.routeName: (ctx) => ZCLInteractPage(),

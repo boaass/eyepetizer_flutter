@@ -10,9 +10,9 @@ class AnimationBarItem extends StatefulWidget {
 
   const AnimationBarItem({
     this.isSelected = false,
-    @required this.text,
-    @required this.icon,
-    @required this.duration,
+    required this.text,
+    required this.icon,
+    required this.duration,
   });
 
   @override

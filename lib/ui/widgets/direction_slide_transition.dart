@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class DirectionSlideTransition extends AnimatedWidget {
   DirectionSlideTransition({
-    Key key,
-    @required Animation<double> position,
+    Key? key,
+    required Animation<double> position,
     this.transformHitTests = true,
     this.direction = AxisDirection.down,
-    @required this.child,
-  }) : super(key: key, listenable: position) {
+    required this.child,
+  }) : super(key: key, listenable: position ) {
     switch (direction) {
       case AxisDirection.up:
         _tween = Tween(begin: const Offset(0, 1), end: const Offset(0, 0));
@@ -30,7 +30,7 @@ class DirectionSlideTransition extends AnimatedWidget {
 
   final AxisDirection direction;
 
-  Tween<Offset> _tween;
+  late Tween<Offset> _tween;
 
   @override
   Widget build(BuildContext context) {

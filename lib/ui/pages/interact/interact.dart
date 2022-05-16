@@ -8,7 +8,7 @@ class ZCLInteractPage extends StatelessWidget {
 
   bool isLogined;
 
-  ZCLInteractPage({Key key, this.isLogined = false}) : super(key: key);
+  ZCLInteractPage({Key? key, this.isLogined = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +23,8 @@ class ZCLInteractPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.error_outline, size: 200,),
-            Text("别错过重要的信息", style: Theme.of(context).textTheme.headline2..copyWith(fontWeight: FontWeight.bold),),
-            Text("登录后即可查看评论回复、点赞及关注等通知信息", style: Theme.of(context).textTheme.headline4.copyWith(color: Colors.black54),)
+            Text("别错过重要的信息", style: Theme.of(context).textTheme.headline2?.copyWith(fontWeight: FontWeight.bold),),
+            Text("登录后即可查看评论回复、点赞及关注等通知信息", style: Theme.of(context).textTheme.headline4?.copyWith(color: Colors.black54),)
           ],
         ),
         GestureDetector(
@@ -37,7 +37,7 @@ class ZCLInteractPage extends StatelessWidget {
             width: 200.px,
             height: 50.px,
             color: Colors.black,
-            child: Text("登录", style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white, fontWeight: FontWeight.bold),),
+            child: Text("登录", style: Theme.of(context).textTheme.headline1?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),),
           ),
         )
       ],

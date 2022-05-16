@@ -8,7 +8,7 @@ class ZCLMainPage extends StatefulWidget {
 
   static const String routeName = "/";
 
-  const ZCLMainPage ({Key key}) : super(key: key);
+  const ZCLMainPage ({Key? key}) : super(key: key);
 
   @override
   _ZCLMainPageState createState() => _ZCLMainPageState();
