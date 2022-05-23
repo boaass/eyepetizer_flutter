@@ -185,6 +185,9 @@ class _ZCLDetailPageState extends State<ZCLDetailPage> {
 
   _buildAuthorItem(ZCLVideoDetailViewModel videoDetailVM) {
     return Container(
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.white10))
+      ),
       child: ListTile(
         leading: CircleAvatar(foregroundImage: NetworkImage(videoDetailVM.videoBeanModel?.author?.icon ?? videoDetailVM.videoBeanModel?.provider?.icon ?? ""),),
         title: Text(videoDetailVM.videoBeanModel?.author?.name ?? videoDetailVM.videoBeanModel?.provider?.name ?? "", style: Theme.of(context).textTheme.headline3!.copyWith(color: Colors.white),),
