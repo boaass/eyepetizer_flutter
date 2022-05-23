@@ -1,5 +1,6 @@
 import 'package:eyepetizer/ui/pages/community/community.dart';
 import 'package:eyepetizer/ui/pages/daily/daily.dart';
+import 'package:eyepetizer/ui/pages/detail/detail.dart';
 import 'package:eyepetizer/ui/pages/discovery/discovery.dart';
 import 'package:eyepetizer/ui/pages/follow/follow.dart';
 import 'package:eyepetizer/ui/pages/home/home.dart';
@@ -25,7 +26,8 @@ class ZCLRouter {
     ZCLDailyPage.routeName: (ctx) => ZCLDailyPage(),
     ZCLNotificationPage.routeName: (ctx) => ZCLNotificationPage(),
     ZCLInteractPage.routeName: (ctx) => ZCLInteractPage(),
-    ZCLMessagePage.routeName: (ctx) => ZCLMessagePage()
+    ZCLMessagePage.routeName: (ctx) => ZCLMessagePage(),
+    ZCLDetailPage.routeName: (ctx) => ZCLDetailPage()
   };
 
   static final RouteFactory unknowRoute = (settings) {

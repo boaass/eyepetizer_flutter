@@ -1,8 +1,13 @@
 import 'package:eyepetizer/core/model/card_model.dart';
+import 'package:eyepetizer/core/model/video_bean_model.dart';
+import 'package:eyepetizer/core/viewmodel/recommend_view_model.dart';
+import 'package:eyepetizer/core/viewmodel/video_detail_view_model.dart';
+import 'package:eyepetizer/ui/pages/detail/detail.dart';
 import 'package:eyepetizer/ui/shared/size_fit.dart';
 import 'package:eyepetizer/ui/widgets/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:eyepetizer/core/extention/num_extention.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 enum ZCLMetroType {
@@ -98,33 +103,64 @@ class _ZCLMetroWidgetState extends State<ZCLMetroWidget> {
   @override
   Widget build(BuildContext context) {
     _initializeVideoPlayController();
+    Widget metroWidget;
     switch (widget._metroType) {
       case ZCLMetroType.feed_cover_large_video:
-        return _buildFeedCoverLargeVideo();
+        metroWidget = _buildFeedCoverLargeVideo();
+        break;
       case ZCLMetroType.slide_cover_image_with_footer:
-        return _buildSlideCoverImageWithFooter();
+        metroWidget = _buildSlideCoverImageWithFooter();
+        break;
       case ZCLMetroType.feed_cover_small_video:
-        return _buildFeedCoverSmallVideo();
+        metroWidget = _buildFeedCoverSmallVideo();
+        break;
       case ZCLMetroType.feed_cover_large_image:
-        return _buildFeedCoverLargeImage();
+        metroWidget = _buildFeedCoverLargeImage();
+        break;
       case ZCLMetroType.feed_item_detail:
-        return _buildFeedItemDetail();
+        metroWidget = _buildFeedItemDetail();
+        break;
       case ZCLMetroType.card_title:
-        return _buildCardTitle();
+        metroWidget = _buildCardTitle();
+        break;
       case ZCLMetroType.normal_text:
-        return _buildNormalText();
+        metroWidget = _buildNormalText();
+        break;
       case ZCLMetroType.refresh_button:
-        return _buildRefreshButton();
+        metroWidget = _buildRefreshButton();
+        break;
       case ZCLMetroType.slide_user:
-        return _buildSlideUser();
+        metroWidget = _buildSlideUser();
+        break;
       case ZCLMetroType.card_user:
-        return _buildCardUser();
+        metroWidget = _buildCardUser();
+        break;
       case ZCLMetroType.slide_cover_video:
-        return _buildSlideCoverVideo();
+        metroWidget = _buildSlideCoverVideo();
+        break;
       case ZCLMetroType.slide_cover_image:
-        return _buildSlideCoverImage();
+        metroWidget = _buildSlideCoverImage();
+        break;
       case null:
-        return Container();
+        metroWidget = Container();
+        break;
+    }
+
+    return _buildGestureForWidget(metroWidget);
+  }
+
+  _buildGestureForWidget(Widget child) {
+    if (widget.model!.type == "video") {
+      return GestureDetector(
+        onTap: () {
+          Provider.of<ZCLVideoDetailNotifier>(context, listen: false).updateVideoId(widget.model!.video_id!);
+          // Provider.of<ZCLRecommendViewModel>(context, listen: false).isBigVideoNeedShow = false;
+          Navigator.of(context).pushNamed(ZCLDetailPage.routeName);
+        },
+        child: child,
+      );
+    } else {
+      return child;
     }
   }
 

@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'config.dart';
 
 class HttpRequest {
-  static final BaseOptions baseOptions = BaseOptions(baseUrl: HttpConfig.baseURL, connectTimeout: HttpConfig.timeout, headers: HttpConfig.headers);
+  static final BaseOptions baseOptions = BaseOptions(connectTimeout: HttpConfig.timeout);
   static final Dio dio = Dio(baseOptions);
   static Future<T> request<T>(String url, {
                               String method = "get",

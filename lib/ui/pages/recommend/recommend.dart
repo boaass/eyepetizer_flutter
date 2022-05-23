@@ -43,7 +43,7 @@ class _ZCLRecommendPageState extends State<ZCLRecommendPage> {
     });
 
     _scrollController.addListener(() {
-      print(_scrollController.position.pixels);
+      // print(_scrollController.position.pixels);
       if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
         _loadMore();
       } else if (Provider.of<ZCLRecommendViewModel>(context, listen: false).isBigVideoNeedShow && _firstItemHeight != 0 && _scrollController.position.pixels >= _firstItemHeight) {

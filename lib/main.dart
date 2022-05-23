@@ -1,6 +1,7 @@
 import 'package:eyepetizer/core/viewmodel/daily.dart';
 import 'package:eyepetizer/core/viewmodel/follow_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/recommend_view_model.dart';
+import 'package:eyepetizer/core/viewmodel/video_detail_view_model.dart';
 import 'package:flutter/material.dart';
 
 import 'package:eyepetizer/core/router/route.dart';
@@ -15,6 +16,10 @@ main() {
         ChangeNotifierProvider(create: (ctx) => ZCLRecommendViewModel()),
         ChangeNotifierProvider(create: (ctx) => ZCLFollowViewModel()),
         ChangeNotifierProvider(create: (ctx) => ZCLDailyViewModel()),
+        ChangeNotifierProvider(create: (ctx) => ZCLVideoDetailNotifier()),
+        ChangeNotifierProxyProvider<ZCLVideoDetailNotifier, ZCLVideoDetailViewModel>(
+            create: (ctx) => ZCLVideoDetailViewModel(Provider.of<ZCLVideoDetailNotifier>(ctx, listen: false).videoId),
+            update: (ctx, notifier, videoDetailVM) => ZCLVideoDetailViewModel(Provider.of<ZCLVideoDetailNotifier>(ctx, listen: false).videoId))
       ],
       child: MyApp()
     )
