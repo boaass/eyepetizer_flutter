@@ -1,9 +1,12 @@
 import 'package:eyepetizer/core/model/card_model.dart';
+import 'package:eyepetizer/core/viewmodel/topic_detail_view_model.dart';
+import 'package:eyepetizer/ui/pages/detail/topic_detail.dart';
 import 'package:eyepetizer/ui/widgets/metro_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:eyepetizer/core/extention/num_extention.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:provider/provider.dart';
 
 
 enum ZCLCardType {
@@ -22,8 +25,12 @@ class ZCLCardWidget extends StatefulWidget {
 
   final int? index;
 
+  final Function(int index)? onTap;
 
-  ZCLCardWidget({Key? key, this.model, this.index}) : assert(model != null), super(key: key) {
+  final int? navIndex;
+
+
+  ZCLCardWidget({Key? key, this.model, this.index, this.onTap, this.navIndex}) : assert(model != null), super(key: key) {
     if (model!.type == "set_metro_list") {
       _cardType = ZCLCardType.set_metro_list;
     } else if (model!.type == "set_banner_list") {
@@ -82,6 +89,10 @@ class _ZCLCardWidgetState extends State<ZCLCardWidget> {
             onIndexChanged: (index) {
               _indexNotifier.value = index+1;
             },
+            onTap: (index) {
+              Provider.of<ZCLTopicDetailNotifier>(context, listen: false).link = widget.model!.body!.metro_list![index].link!;
+              Navigator.of(context).pushNamed(ZCLTopicDetailPage.routeName);
+            },
           ),
         ),
         Container(
@@ -132,7 +143,7 @@ class _ZCLCardWidgetState extends State<ZCLCardWidget> {
   _buildSetMetroListCard() {
     List<Widget> headers = List.from(widget.model!.header!.left!.map((e) => ZCLMetroWidget(model: e,)))
         ..addAll(List.from(widget.model!.header!.right!.map((e) => ZCLMetroWidget(model: e,))));
-    List<Widget> bodys = List.from(widget.model!.body!.metro_list!.map((e) => ZCLMetroWidget(model: e)));
+    List<Widget> bodys = List.from(widget.model!.body!.metro_list!.map((v) => ZCLMetroWidget(model: v, onTap: widget.onTap, navIndex: widget.navIndex,)));
     List<Widget> footers = List.from(widget.model!.footer!.left!.map((e) => ZCLMetroWidget(model: e,)))
       ..addAll(List.from(widget.model!.footer!.right!.map((e) => ZCLMetroWidget(model: e,))));
     // List adverts = widget.model!.adverts!;

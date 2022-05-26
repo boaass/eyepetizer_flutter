@@ -1,6 +1,7 @@
 import 'package:eyepetizer/ui/pages/community/community.dart';
 import 'package:eyepetizer/ui/pages/daily/daily.dart';
-import 'package:eyepetizer/ui/pages/detail/detail.dart';
+import 'package:eyepetizer/ui/pages/detail/topic_detail.dart';
+import 'package:eyepetizer/ui/pages/detail/video_detail.dart';
 import 'package:eyepetizer/ui/pages/discovery/discovery.dart';
 import 'package:eyepetizer/ui/pages/follow/follow.dart';
 import 'package:eyepetizer/ui/pages/home/home.dart';
@@ -27,7 +28,8 @@ class ZCLRouter {
     ZCLNotificationPage.routeName: (ctx) => ZCLNotificationPage(),
     ZCLInteractPage.routeName: (ctx) => ZCLInteractPage(),
     ZCLMessagePage.routeName: (ctx) => ZCLMessagePage(),
-    ZCLDetailPage.routeName: (ctx) => ZCLDetailPage()
+    ZCLVideoDetailPage.routeName: (ctx) => ZCLVideoDetailPage(),
+    ZCLTopicDetailPage.routeName: (ctx) => ZCLTopicDetailPage(),
   };
 
   static final RouteFactory unknowRoute = (settings) {

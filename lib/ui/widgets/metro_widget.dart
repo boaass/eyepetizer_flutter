@@ -1,8 +1,9 @@
+import 'package:date_format/date_format.dart';
 import 'package:eyepetizer/core/model/card_model.dart';
 import 'package:eyepetizer/core/model/video_bean_model.dart';
 import 'package:eyepetizer/core/viewmodel/recommend_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/video_detail_view_model.dart';
-import 'package:eyepetizer/ui/pages/detail/detail.dart';
+import 'package:eyepetizer/ui/pages/detail/video_detail.dart';
 import 'package:eyepetizer/ui/shared/size_fit.dart';
 import 'package:eyepetizer/ui/widgets/expandable_text.dart';
 import 'package:flutter/material.dart';
@@ -22,19 +23,25 @@ enum ZCLMetroType {
   slide_user,
   card_user,
   slide_cover_video,
-  slide_cover_image
+  slide_cover_image,
+  topic_intro,
+  rich_text_detail,
+  default_nav,
 }
 class ZCLMetroWidget extends StatefulWidget {
 
   ZCLMetroType? _metroType;
   final ZCLMetro? model;
 
-  ZCLMetroWidget({Key? key, this.model}) :
+  final Function(int)? onTap;
+  final int? navIndex;
+
+  ZCLMetroWidget({Key? key, this.model, this.onTap, this.navIndex = 0}) :
         assert(model != null),
         super(key: key) {
     if (model!.style!.tpl_label == "feed_cover_large_video") {
       _metroType = ZCLMetroType.feed_cover_large_video;
-    } else if (model!.style!.tpl_label == "feed_cover_small_video" ) {
+    } else if (model!.style!.tpl_label == "feed_cover_small_video") {
       _metroType = ZCLMetroType.feed_cover_small_video;
     } else if (model!.style!.tpl_label == "slide_cover_image_with_footer") {
       _metroType = ZCLMetroType.slide_cover_image_with_footer;
@@ -56,6 +63,12 @@ class ZCLMetroWidget extends StatefulWidget {
       _metroType = ZCLMetroType.slide_cover_video;
     } else if (model!.style!.tpl_label == "slide_cover_image") {
       _metroType = ZCLMetroType.slide_cover_image;
+    } else if (model!.style!.tpl_label == "topic_intro") {
+      _metroType = ZCLMetroType.topic_intro;
+    } else if (model!.style!.tpl_label == "rich_text_detail") {
+      _metroType = ZCLMetroType.rich_text_detail;
+    } else if (model!.style!.tpl_label == "default_nav") {
+      _metroType = ZCLMetroType.default_nav;
     } else {
       assert(true, "Unknow metro type");
     }
@@ -65,7 +78,7 @@ class ZCLMetroWidget extends StatefulWidget {
   _ZCLMetroWidgetState createState() => _ZCLMetroWidgetState();
 }
 
-class _ZCLMetroWidgetState extends State<ZCLMetroWidget> {
+class _ZCLMetroWidgetState extends State<ZCLMetroWidget> with TickerProviderStateMixin {
   VideoPlayerController? _videoController;
 
   @override
@@ -78,6 +91,7 @@ class _ZCLMetroWidgetState extends State<ZCLMetroWidget> {
   @override
   void dispose() {
     _videoController?.dispose();
+    _tabController?.dispose();
     super.dispose();
   }
 
@@ -141,6 +155,15 @@ class _ZCLMetroWidgetState extends State<ZCLMetroWidget> {
       case ZCLMetroType.slide_cover_image:
         metroWidget = _buildSlideCoverImage();
         break;
+      case ZCLMetroType.topic_intro:
+        metroWidget = _buildTopicIntro();
+        break;
+      case ZCLMetroType.rich_text_detail:
+        metroWidget = _buildRichTextDetail();
+        break;
+      case ZCLMetroType.default_nav:
+        metroWidget = _buildDefaultNav();
+        break;
       case null:
         metroWidget = Container();
         break;
@@ -155,7 +178,7 @@ class _ZCLMetroWidgetState extends State<ZCLMetroWidget> {
         onTap: () {
           Provider.of<ZCLVideoDetailNotifier>(context, listen: false).updateVideoId(widget.model!.video_id!);
           // Provider.of<ZCLRecommendViewModel>(context, listen: false).isBigVideoNeedShow = false;
-          Navigator.of(context).pushNamed(ZCLDetailPage.routeName);
+          Navigator.of(context).pushNamed(ZCLVideoDetailPage.routeName);
         },
         child: child,
       );
@@ -361,34 +384,70 @@ class _ZCLMetroWidgetState extends State<ZCLMetroWidget> {
                 .of(context)
                 .textTheme
                 .headline4,),
-            subtitle: Text(
-                widget.model!.publish_time!,
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .headline5!
-                    .copyWith(color: Colors.black54)),
+            subtitle: Row(
+              children: [
+                Text(
+                  widget.model!.publish_time!,
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .headline5!
+                      .copyWith(color: Colors.black54)),
+              ]..add(Container(width: 10.px,))..addAll((widget.model!.metroData!.location != null && widget.model!.metroData!.location!.city != "") ? [Icon(Icons.location_on, size: 10.px,), Text(widget.model!.metroData!.location!.city!, style: Theme
+                  .of(context)
+                  .textTheme
+                  .headline5!
+                  .copyWith(color: Colors.black54))] : [Container()]),
+            ),
             trailing: Icon(Icons.add_box, color: Colors.black, size: 30.px,),
           ),
-          Row(
-            children: widget.model!.topics!.map((e) => GestureDetector(
-              onTap: (){
-                // todo: 跳转 topic 详情页
-              },
-              child: Container(
-                padding: EdgeInsets.fromLTRB(5.px, 1.px, 5.px, 1.px),
-                decoration: BoxDecoration(
-                  color: Colors.deepPurple,
-                  borderRadius: BorderRadius.circular(10.px)
-                ),
-                child: Text(e.title!, style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),)
+          widget.model!.metroData!.topics!.length != 0 ?
+          Column(
+            children: [
+              Row(
+                children: widget.model!.metroData!.topics!.map((e) => GestureDetector(
+                  onTap: (){
+                    // todo: 跳转 topic 详情页
+                  },
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(5.px, 1.px, 5.px, 1.px),
+                    decoration: BoxDecoration(
+                      color: Colors.deepPurple,
+                      borderRadius: BorderRadius.circular(10.px)
+                    ),
+                    child: Text(e.title!, style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white),)
+                  )
+                )).toList(),
+              ),
+              Container(
+                  margin: EdgeInsets.only(top: 10.px),
+                  child: Image.network(widget.model!.video!.cover!)
               )
-            )).toList(),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 10.px),
-            child: Image.network(widget.model!.video!.cover!)
-          ),
+            ],
+          ) :
+          widget.model!.metroData!.images!.length != 0 ?
+          MediaQuery.removePadding( // 移除边距
+            removeTop: true,
+            removeBottom: true,
+            context: context,
+            child: GridView.count(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            crossAxisCount: _calculateCrossAxisCountForTotalCount(widget.model!.metroData!.images!.length),
+            mainAxisSpacing: 3.px,
+            crossAxisSpacing: 3.px,
+            childAspectRatio: 1,
+            children: widget.model!.metroData!.images!.map((e) => Image.network(e.cover!.url!, fit: BoxFit.cover,)).toList(),
+            ),
+          ) :
+          widget.model!.metroData!.video != null ?
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Image.network(widget.model!.metroData!.video!.cover!),
+              Icon(Icons.play_arrow, color: Colors.white, size: 30.px,)
+            ],
+          ) : Container(),
           Container(
             padding: EdgeInsets.only(top: 5.px),
             child: ExpandableText(
@@ -413,7 +472,7 @@ class _ZCLMetroWidgetState extends State<ZCLMetroWidget> {
                     _buildFooterItem(Icons.messenger_outline_rounded, widget.model!.consumption!.comment_count!),
                   ],
                 ),
-                Icon(Icons.add_to_home_screen_outlined)
+                Icon(Icons.share_outlined)
               ],
             ),
           ),
@@ -421,6 +480,15 @@ class _ZCLMetroWidgetState extends State<ZCLMetroWidget> {
         ],
       )
     );
+  }
+
+  _calculateCrossAxisCountForTotalCount(int count) {
+    if (count <= 3) {
+      return count;
+    } else if (count == 4) {
+      return 2;
+    }
+    return 3;
   }
 
   _buildFooterItem(IconData icon, int count) {
@@ -508,6 +576,93 @@ class _ZCLMetroWidgetState extends State<ZCLMetroWidget> {
     return Container(
       padding: EdgeInsets.only(top: 10.px),
       child: Image.network(widget.model!.cover!)
+    );
+  }
+
+  _buildTopicIntro() {
+    return Container(
+      margin: EdgeInsets.only(bottom: 50.px),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Image.network(
+            widget.model!.background!.url!,
+            width: ZCLSizeFit.screenWidth,
+            height: ZCLSizeFit.screenWidth,
+            fit: BoxFit.fill,
+          ),
+          Positioned(
+            bottom: -50.px,
+            child: Container(
+              color: Color(0xFFEEEEEE),
+              width: ZCLSizeFit.screenWidth! - 50.px,
+              height: 100.px,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(30.px, 0, 0, 0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(widget.model!.title!, style: Theme.of(context).textTheme.headline3,),
+                    Text(widget.model!.tags![0], style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.black54),)
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  _buildRichTextDetail() {
+    Widget child = Container();
+    if (widget.model!.metroData!.type == "json") {
+      child = Container(
+        padding: EdgeInsets.all(10.px),
+        child: RichText(
+          text: TextSpan(
+            children: widget.model!.metroData!.content!.blocks!.map((e) => TextSpan(text: "${e.text}\n", style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.black87 ,fontFamily: widget.model!.metroData!.content!.globalStyle!.fontFamily))).toList()
+          ),
+        ),
+      );
+    }
+    return child;
+  }
+
+  int _currentIndex = 0;
+  TabController? _tabController;
+  _buildDefaultNav() {
+    Widget child = Container();
+    _currentIndex = widget.navIndex!;
+    child = _buildDefaultNavTabBar();
+    return child;
+  }
+
+  _buildDefaultNavTabBar() {
+    _tabController = TabController(length: widget.model!.metroData!.navList!.length, vsync: this);
+    return TabBar(
+      key: widget.model!.stickyKey,
+      onTap: (index) {
+        if (index != _currentIndex) {
+          setState(() {
+            _currentIndex = index;
+            if (widget.onTap != null) {
+              widget.onTap!(index);
+            }
+          });
+        }
+      },
+      controller: _tabController,
+      labelPadding: EdgeInsets.zero,
+      tabs: widget.model!.metroData!.navList!.asMap().map((int index, NavList e) => MapEntry(index, Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              border: index == _currentIndex ? Border(top: BorderSide(color: Colors.black54), right: BorderSide(color: Colors.black54)) : Border.all(color: Colors.black54)
+          ),
+          padding: EdgeInsets.fromLTRB(30.px, 10.px, 30.px, 10.px),
+          child: Text(e.title!, style: Theme.of(context).textTheme.headline3,)
+      ))).values.toList(),
     );
   }
 }

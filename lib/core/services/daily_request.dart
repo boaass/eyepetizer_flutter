@@ -11,7 +11,7 @@ class ZCLDailyRequest {
     final headers = HttpConfig.apiHeaders;
     final params =
     {
-      "token": "34b93a59a1029aca",
+      // "token": "34b93a59a1029aca",
       "page_type": "card",
       "page_label": "daily_issue"
     };

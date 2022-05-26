@@ -31,6 +31,30 @@ class ZCLCard {
   };
 }
 
+class ZCLMertroList {
+  ZCLMertroList({
+    this.itemList,
+    this.itemCount,
+    this.lastItemId,
+  });
+
+  List<ZCLMetro>? itemList;
+  int? itemCount;
+  String? lastItemId;
+
+  factory ZCLMertroList.fromJson(Map<String, dynamic> json) => ZCLMertroList(
+    itemList: json["item_list"] == null ? null : List<ZCLMetro>.from(json["item_list"].map((x) => ZCLMetro.fromJson(x))),
+    itemCount: json["item_count"] == null ? null : json["item_count"],
+    lastItemId: json["last_item_id"] == null ? null : json["last_item_id"].toString(),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "item_list": itemList == null ? null : List<dynamic>.from(itemList!.map((x) => x.toJson())),
+    "item_count": itemCount == null ? null : itemCount,
+    "last_item_id": lastItemId == null ? null : lastItemId,
+  };
+}
+
 class ZCLMetro {
   final int? metro_id;
   final String? type;
@@ -58,6 +82,8 @@ class ZCLMetro {
   final bool? is_ad;
   double? videoPlayerAspectRatio;
   GlobalKey? stickyKey;
+  final Background? background;
+  final MetroData? metroData;
 
   ZCLMetro({
     this.metro_id,
@@ -84,7 +110,9 @@ class ZCLMetro {
     this.description,
     this.video,
     this.videoPlayerAspectRatio = 0,
-    this.is_ad
+    this.is_ad,
+    this.background,
+    this.metroData,
   });
 
   factory ZCLMetro.fromJson(Map<String, dynamic>? json) => ZCLMetro(
@@ -98,7 +126,7 @@ class ZCLMetro {
     tags: List<String>.from((json?["metro_data"]?["tags"]??[]).map((x) => x?["title"])),
     cover: json?["metro_data"]?["cover"]?["url"] ?? "",
     author: ZCLAuthor.fromJson(json?["metro_data"]?["author"]),
-    link: json?["link"] ?? "",
+    link: json?["link"].toString() ?? "",
     style: ZCLStyle.fromJson(json?["style"] ?? {}),
     publish_time: json?["metro_data"]?["publish_time"] ?? "",
     topics: List<ZCLTopic>.from((json?["metro_data"]?["topics"] ?? []).map((e) => ZCLTopic.fromJson(e))),
@@ -111,7 +139,9 @@ class ZCLMetro {
     nick: json?["metro_data"]?["nick"] ?? "",
     description: json?["metro_data"]?["description"] ?? "",
     video: ZCLVideo.fromJson(json?["metro_data"]?["video"] ?? {}),
-    is_ad: json?["metro_data"]?["is_ad"] ?? false
+    is_ad: json?["metro_data"]?["is_ad"] ?? false,
+    background: Background.fromJson(json?["metro_data"]?["background"] ?? {}),
+    metroData: MetroData.fromJson(json?["metro_data"] ?? {})
   );
 
   Map<String, dynamic> toJson() => {
@@ -138,7 +168,9 @@ class ZCLMetro {
     "nick": nick,
     "description": description,
     "video": video?.toJson(),
-    "is_ad": is_ad
+    "is_ad": is_ad,
+    "background": background?.toJson(),
+    "metroData": metroData?.toJson()
   };
 }
 
@@ -162,17 +194,20 @@ class ZCLHeader {
 class ZCLBody {
   final List<ZCLMetro>? metro_list;
   final String? refill_link;
+  ApiRequest? apiRequest;
 
-  ZCLBody({this.metro_list, this.refill_link});
+  ZCLBody({this.metro_list, this.refill_link, this.apiRequest});
   
   factory ZCLBody.fromJson(Map<String, dynamic> json) => ZCLBody(
     metro_list: List<ZCLMetro>.from((json["metro_list"] ?? []).map((x) => ZCLMetro.fromJson(x))),
-    refill_link: json["refill_link"] ?? ""
+    refill_link: json["refill_link"] ?? "",
+    apiRequest: json["api_request"] == null ? null : ApiRequest.fromJson(json["api_request"])
   );
 
   Map<String, dynamic> toJson() => {
     "metro_list": metro_list?.map((e) => e.toJson()).toList(),
-    "refill_link": refill_link
+    "refill_link": refill_link,
+    "apiRequest": apiRequest?.toJson()
   };
 }
 
@@ -190,6 +225,74 @@ class ZCLFooter {
   Map<String, dynamic> toJson() => {
     "left": left!.map((e) => e.toJson()).toList(),
     "right": right!.map((e) => e.toJson()).toList()
+  };
+}
+
+class ApiRequest {
+  ApiRequest({
+    this.url,
+    this.params,
+  });
+
+  String? url;
+  Params? params;
+
+  factory ApiRequest.fromJson(Map<String, dynamic> json) => ApiRequest(
+    url: json["url"] == null ? null : json["url"],
+    params: json["params"] == null ? null : Params.fromJson(json["params"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "url": url == null ? null : url,
+    "params": params == null ? null : params!.toJson(),
+  };
+}
+
+class Params {
+  Params({
+    this.card,
+    this.cardIndex,
+    this.materialIndex,
+    this.materialRelativeIndex,
+    this.material,
+    this.dataSource,
+    this.lastItemId,
+    this.pageLabel,
+    this.pageParams,
+  });
+
+  String? card;
+  int? cardIndex;
+  int? materialIndex;
+  int? materialRelativeIndex;
+  String? material;
+  String? dataSource;
+  String? lastItemId;
+  String? pageLabel;
+  String? pageParams;
+
+  factory Params.fromJson(Map<String, dynamic> json) => Params(
+    card: json["card"] == null ? null : json["card"],
+    cardIndex: json["card_index"] == null ? null : json["card_index"],
+    materialIndex: json["material_index"] == null ? null : json["material_index"],
+    materialRelativeIndex: json["material_relative_index"] == null ? null : json["material_relative_index"],
+    material: json["material"] == null ? null : json["material"],
+    dataSource: json["data_source"] == null ? null : json["data_source"],
+    lastItemId: json["last_item_id"] == null ? null : json["last_item_id"].toString(),
+    pageLabel: json["page_label"] == null ? null : json["page_label"],
+    pageParams: json["page_params"] == null ? null : json["page_params"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "card": card == null ? null : card,
+    "card_index": cardIndex == null ? null : cardIndex,
+    "material_index": materialIndex == null ? null : materialIndex,
+    "material_relative_index": materialRelativeIndex == null ? null : materialRelativeIndex,
+    "material": material == null ? null : material,
+    "data_source": dataSource == null ? null : dataSource,
+    "last_item_id": lastItemId == null ? null : lastItemId,
+    "page_label": pageLabel == null ? null : pageLabel,
+    "page_params": pageParams == null ? null : pageParams,
   };
 }
 
@@ -398,3 +501,440 @@ class ZCLStyle {
     "across_column": across_column
   };
 }
+
+class Background {
+  Background({
+    this.url,
+    this.imageInfo,
+  });
+
+  String? url;
+  ImageInfo? imageInfo;
+
+  factory Background.fromJson(Map<String, dynamic> json) => Background(
+    url: json["url"] == null ? null : json["url"],
+    imageInfo: json["img_info"] == null ? null : ImageInfo.fromJson(json["img_info"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "url": url == null ? null : url,
+    "img_info": imageInfo == null ? null : imageInfo!.toJson(),
+  };
+}
+
+class ImageInfo {
+  ImageInfo({
+    this.width,
+    this.height,
+    this.scale,
+  });
+
+  int? width;
+  int? height;
+  int? scale;
+
+  factory ImageInfo.fromJson(Map<String, dynamic> json) => ImageInfo(
+    width: json["width"] == null ? null : json["width"],
+    height: json["height"] == null ? null : json["height"],
+    scale: json["scale"] == null ? null : json["scale"].toInt(),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "width": width == null ? null : width,
+    "height": height == null ? null : height,
+    "scale": scale == null ? null : scale,
+  };
+}
+
+class MetroData {
+  MetroData({
+    this.type,
+    this.style,
+    this.content,
+    this.navList,
+    this.itemId,
+    this.publishTime,
+    this.rawPublishTime,
+    this.location,
+    this.topics,
+    this.text,
+    this.images,
+    this.video,
+    this.author,
+    this.consumption,
+    this.liked,
+    this.collected,
+    this.resourceId,
+    this.resourceType,
+    this.privateMsgLink,
+    this.commentExtraTrackingFields,
+    this.isMine,
+    this.showLockIcon,
+    this.showFollowBtn,
+    this.showMoreBtn,
+    this.moreOption,
+  });
+
+  String? type;
+  String? style;
+  Content? content;
+  List<NavList>? navList;
+  String? itemId;
+  String? publishTime;
+  DateTime? rawPublishTime;
+  Location? location;
+  List<ZCLTopic>? topics;
+  String? text;
+  List<ZCLImage>? images;
+  ZCLVideo? video;
+  ZCLAuthor? author;
+  ZCLConsumption? consumption;
+  bool? liked;
+  bool? collected;
+  String? resourceId;
+  String? resourceType;
+  String? privateMsgLink;
+  CommentExtraTrackingFields? commentExtraTrackingFields;
+  bool? isMine;
+  bool? showLockIcon;
+  bool? showFollowBtn;
+  bool? showMoreBtn;
+  List<ZCLMoreOption>? moreOption;
+
+  factory MetroData.fromJson(Map<String, dynamic> json) => MetroData(
+    type: json["type"] == null ? null : json["type"],
+    style: json["style"] == null ? null : json["style"],
+    content: json["content"] == null ? null : Content.fromJson(json["content"]),
+    navList: json["nav_list"] == null ? null : List<NavList>.from(json["nav_list"].map((x) => NavList.fromJson(x ?? {}))),
+    itemId: json["item_id"] == null ? null : json["item_id"],
+    publishTime: json["publish_time"] == null ? null : json["publish_time"],
+    rawPublishTime: json["raw_publish_time"] == null ? null : DateTime.parse(json["raw_publish_time"]),
+    location: json["location"] == null ? null : Location.fromJson(json["location"]),
+    topics: json["topics"] == null ? null : List<ZCLTopic>.from(json["topics"].map((x) => ZCLTopic.fromJson(x))),
+    text: json["text"] == null ? null : json["text"],
+    images: json["images"] == null ? null : List<ZCLImage>.from(json["images"].map((x) => ZCLImage.fromJson(x))),
+    video: json["video"] == null ? null : ZCLVideo.fromJson(json["video"]),
+    author: json["author"] == null ? null : ZCLAuthor.fromJson(json["author"]),
+    consumption: json["consumption"] == null ? null : ZCLConsumption.fromJson(json["consumption"]),
+    liked: json["liked"] == null ? null : json["liked"],
+    collected: json["collected"] == null ? null : json["collected"],
+    resourceId: json["resource_id"] == null ? null : json["resource_id"].toString(),
+    resourceType: json["resource_type"] == null ? null : json["resource_type"],
+    privateMsgLink: json["private_msg_link"] == null ? null : json["private_msg_link"],
+    commentExtraTrackingFields: json["comment_extra_tracking_fields"] == null ? null : CommentExtraTrackingFields.fromJson(json["comment_extra_tracking_fields"]),
+    isMine: json["is_mine"] == null ? null : json["is_mine"],
+    showLockIcon: json["show_lock_icon"] == null ? null : json["show_lock_icon"],
+    showFollowBtn: json["show_follow_btn"] == null ? null : json["show_follow_btn"],
+    showMoreBtn: json["show_more_btn"] == null ? null : json["show_more_btn"],
+    moreOption: json["more_option"] == null ? null : List<ZCLMoreOption>.from(json["more_option"].map((x) => ZCLMoreOption.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "type": type == null ? null : type,
+    "style": style == null ? null : style,
+    "content": content == null ? null : content!.toJson(),
+    "navList": navList == null ? null : navList!.map((NavList e) => e.toJson()),
+    "item_id": itemId == null ? null : itemId,
+    "publish_time": publishTime == null ? null : publishTime,
+    "raw_publish_time": rawPublishTime == null ? null : rawPublishTime!.toIso8601String(),
+    "location": location == null ? null : location!.toJson(),
+    "topics": topics == null ? null : List<dynamic>.from(topics!.map((x) => x)),
+    "text": text == null ? null : text,
+    "images": images == null ? null : List<dynamic>.from(images!.map((x) => x.toJson())),
+    "video": video == null ? null : video!.toJson(),
+    "author": author == null ? null : author!.toJson(),
+    "consumption": consumption == null ? null : consumption!.toJson(),
+    "liked": liked == null ? null : liked,
+    "collected": collected == null ? null : collected,
+    "resource_id": resourceId == null ? null : resourceId,
+    "resource_type": resourceType == null ? null : resourceType,
+    "private_msg_link": privateMsgLink == null ? null : privateMsgLink,
+    "comment_extra_tracking_fields": commentExtraTrackingFields == null ? null : commentExtraTrackingFields!.toJson(),
+    "is_mine": isMine == null ? null : isMine,
+    "show_lock_icon": showLockIcon == null ? null : showLockIcon,
+    "show_follow_btn": showFollowBtn == null ? null : showFollowBtn,
+    "show_more_btn": showMoreBtn == null ? null : showMoreBtn,
+    "more_option": moreOption == null ? null : List<dynamic>.from(moreOption!.map((x) => x.toJson())),
+  };
+}
+
+class ZCLImage {
+  ZCLImage({
+    this.imageId,
+    this.cover,
+  });
+
+  String? imageId;
+  Cover? cover;
+
+  factory ZCLImage.fromJson(Map<String, dynamic> json) => ZCLImage(
+    imageId: json["image_id"] == null ? null : json["image_id"],
+    cover: json["cover"] == null ? null : Cover.fromJson(json["cover"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "image_id": imageId == null ? null : imageId,
+    "cover": cover == null ? null : cover!.toJson(),
+  };
+}
+
+class Cover {
+  Cover({
+    this.url,
+    this.imgInfo,
+  });
+
+  String? url;
+  ImageInfo? imgInfo;
+
+  factory Cover.fromJson(Map<String, dynamic> json) => Cover(
+    url: json["url"] == null ? null : json["url"],
+    imgInfo: json["img_info"] == null ? null : ImageInfo.fromJson(json["img_info"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "url": url == null ? null : url,
+    "img_info": imgInfo == null ? null : imgInfo!.toJson(),
+  };
+}
+
+class Location {
+  Location({
+    this.area,
+    this.city,
+    this.longitude,
+    this.latitude,
+  });
+
+  String? area;
+  String? city;
+  String? longitude;
+  String? latitude;
+
+  factory Location.fromJson(Map<String, dynamic> json) => Location(
+    area: json["area"] == null ? null : json["area"],
+    city: json["city"] == null ? null : json["city"],
+    longitude: json["longitude"] == null ? null : json["longitude"].toString(),
+    latitude: json["latitude"] == null ? null : json["latitude"].toString(),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "area": area == null ? null : area,
+    "city": city == null ? null : city,
+    "longitude": longitude == null ? null : longitude,
+    "latitude": latitude == null ? null : latitude,
+  };
+}
+
+class CommentExtraTrackingFields {
+  CommentExtraTrackingFields({
+    this.resourceId,
+    this.resourceType,
+  });
+
+  String? resourceId;
+  String? resourceType;
+
+  factory CommentExtraTrackingFields.fromJson(Map<String, dynamic> json) => CommentExtraTrackingFields(
+    resourceId: json["resource_id"] == null ? null : json["resource_id"],
+    resourceType: json["resource_type"] == null ? null : json["resource_type"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "resource_id": resourceId == null ? null : resourceId,
+    "resource_type": resourceType == null ? null : resourceType,
+  };
+}
+
+class Content {
+  Content({
+    this.blocks,
+    this.entityMap,
+    this.globalStyle,
+  });
+
+  List<Block>? blocks;
+  List<dynamic>? entityMap;
+  GlobalStyle? globalStyle;
+
+  factory Content.fromJson(Map<String, dynamic> json) => Content(
+    blocks: json["blocks"] == null ? null : List<Block>.from(json["blocks"].map((x) => Block.fromJson(x))),
+    entityMap: json["entityMap"] == null ? null : List<dynamic>.from(json["entityMap"].map((x) => x)),
+    globalStyle: json["globalStyle"] == null ? null : GlobalStyle.fromJson(json["globalStyle"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "blocks": blocks == null ? null : List<dynamic>.from(blocks!.map((x) => x.toJson())),
+    "entityMap": entityMap == null ? null : List<dynamic>.from(entityMap!.map((x) => x)),
+    "globalStyle": globalStyle == null ? null : globalStyle!.toJson(),
+  };
+}
+
+class Block {
+  Block({
+    this.key,
+    this.text,
+    this.type,
+    this.depth,
+    this.inlineStyleRanges,
+    this.entityRanges,
+    this.data,
+  });
+
+  String? key;
+  String? text;
+  String? type;
+  int? depth;
+  List<dynamic>? inlineStyleRanges;
+  List<dynamic>? entityRanges;
+  Data? data;
+
+  factory Block.fromJson(Map<String, dynamic> json) => Block(
+    key: json["key"] == null ? null : json["key"],
+    text: json["text"] == null ? null : json["text"],
+    type: json["type"] == null ? null : json["type"],
+    depth: json["depth"] == null ? null : json["depth"],
+    inlineStyleRanges: json["inlineStyleRanges"] == null ? null : List<dynamic>.from(json["inlineStyleRanges"].map((x) => x)),
+    entityRanges: json["entityRanges"] == null ? null : List<dynamic>.from(json["entityRanges"].map((x) => x)),
+    data: json["data"] == null ? null : Data.fromJson(json["data"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "key": key == null ? null : key,
+    "text": text == null ? null : text,
+    "type": type == null ? null : type,
+    "depth": depth == null ? null : depth,
+    "inlineStyleRanges": inlineStyleRanges == null ? null : List<dynamic>.from(inlineStyleRanges!.map((x) => x)),
+    "entityRanges": entityRanges == null ? null : List<dynamic>.from(entityRanges!.map((x) => x)),
+    "data": data == null ? null : data!.toJson(),
+  };
+}
+
+class Data {
+  Data({
+    this.marginLeft,
+    this.marginRight,
+  });
+
+  int? marginLeft;
+  int? marginRight;
+
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
+    marginLeft: json["marginLeft"] == null ? null : json["marginLeft"],
+    marginRight: json["marginRight"] == null ? null : json["marginRight"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "marginLeft": marginLeft == null ? null : marginLeft,
+    "marginRight": marginRight == null ? null : marginRight,
+  };
+}
+
+class GlobalStyle {
+  GlobalStyle({
+    this.fontSize,
+    this.letterSpacing,
+    this.lineHeight,
+    this.fontFamily,
+    this.backgroundColor,
+  });
+
+  int? fontSize;
+  double? letterSpacing;
+  int? lineHeight;
+  String? fontFamily;
+  String? backgroundColor;
+
+  factory GlobalStyle.fromJson(Map<String, dynamic> json) => GlobalStyle(
+    fontSize: json["fontSize"] == null ? null : json["fontSize"],
+    letterSpacing: json["letterSpacing"] == null ? null : json["letterSpacing"].toDouble(),
+    lineHeight: json["lineHeight"] == null ? null : json["lineHeight"],
+    fontFamily: json["fontFamily"] == null ? null : json["fontFamily"],
+    backgroundColor: json["backgroundColor"] == null ? null : json["backgroundColor"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "fontSize": fontSize == null ? null : fontSize,
+    "letterSpacing": letterSpacing == null ? null : letterSpacing,
+    "lineHeight": lineHeight == null ? null : lineHeight,
+    "fontFamily": fontFamily == null ? null : fontFamily,
+    "backgroundColor": backgroundColor == null ? null : backgroundColor,
+  };
+}
+
+class NavList {
+  NavList({
+    this.pageLabel,
+    this.pageType,
+    this.title,
+    this.url,
+    this.defaultDisplay,
+    this.forceRefresh,
+    this.apiRequest,
+    this.pageUrl,
+    this.pageUrlParameter,
+    this.isRecommend,
+    this.childNav,
+  });
+
+  String? pageLabel;
+  String? pageType;
+  String? title;
+  String? url;
+  bool? defaultDisplay;
+  bool? forceRefresh;
+  ApiRequest? apiRequest;
+  String? pageUrl;
+  String? pageUrlParameter;
+  bool? isRecommend;
+  ChildNav? childNav;
+
+  factory NavList.fromJson(Map<String, dynamic> json) => NavList(
+    pageLabel: json["page_label"] == null ? null : json["page_label"],
+    pageType: json["page_type"] == null ? null : json["page_type"],
+    title: json["title"] == null ? null : json["title"],
+    url: json["url"] == null ? null : json["url"],
+    defaultDisplay: json["default_display"] == null ? null : json["default_display"],
+    forceRefresh: json["force_refresh"] == null ? null : json["force_refresh"],
+    apiRequest: json["api_request"] == null ? null : ApiRequest.fromJson(json["api_request"]),
+    pageUrl: json["page_url"] == null ? null : json["page_url"],
+    pageUrlParameter: json["page_url_parameter"] == null ? null : json["page_url_parameter"],
+    isRecommend: json["is_recommend"] == null ? null : json["is_recommend"],
+    childNav: json["child_nav"] == null ? null : ChildNav.fromJson(json["child_nav"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "page_label": pageLabel == null ? null : pageLabel,
+    "page_type": pageType == null ? null : pageType,
+    "title": title == null ? null : title,
+    "url": url == null ? null : url,
+    "default_display": defaultDisplay == null ? null : defaultDisplay,
+    "force_refresh": forceRefresh == null ? null : forceRefresh,
+    "api_request": apiRequest == null ? null : apiRequest!.toJson(),
+    "page_url": pageUrl == null ? null : pageUrl,
+    "page_url_parameter": pageUrlParameter == null ? null : pageUrlParameter,
+    "is_recommend": isRecommend == null ? null : isRecommend,
+    "child_nav": childNav == null ? null : childNav!.toJson(),
+  };
+}
+
+class ChildNav {
+  ChildNav({
+    this.fixed,
+    this.slide,
+  });
+
+  List<dynamic>? fixed;
+  List<dynamic>? slide;
+
+  factory ChildNav.fromJson(Map<String, dynamic> json) => ChildNav(
+    fixed: json["fixed"] == null ? null : List<dynamic>.from(json["fixed"].map((x) => x)),
+    slide: json["slide"] == null ? null : List<dynamic>.from(json["slide"].map((x) => x)),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "fixed": fixed == null ? null : List<dynamic>.from(fixed!.map((x) => x)),
+    "slide": slide == null ? null : List<dynamic>.from(slide!.map((x) => x)),
+  };
+}
+

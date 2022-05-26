@@ -10,17 +10,17 @@ import 'package:date_format/date_format.dart';
 import 'package:eyepetizer/core/extention/num_extention.dart';
 
 
-class ZCLDetailPage extends StatefulWidget {
+class ZCLVideoDetailPage extends StatefulWidget {
 
-  static const String routeName = "/detail";
+  static const String routeName = "/video_detail";
 
-  const ZCLDetailPage({Key? key}) : super(key: key);
+  const ZCLVideoDetailPage({Key? key}) : super(key: key);
 
   @override
-  _ZCLDetailPageState createState() => _ZCLDetailPageState();
+  _ZCLVideoDetailPageState createState() => _ZCLVideoDetailPageState();
 }
 
-class _ZCLDetailPageState extends State<ZCLDetailPage> {
+class _ZCLVideoDetailPageState extends State<ZCLVideoDetailPage> {
 
   ScrollController _scrollController = ScrollController();
   //顶部偏移量
@@ -162,7 +162,7 @@ class _ZCLDetailPageState extends State<ZCLDetailPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _buildActionButton(Icons.thumb_up_alt_outlined, videoDetailVM.videoBeanModel!.consumption!.collectionCount!.toString()),
-                _buildActionButton(Icons.add_to_home_screen_outlined, videoDetailVM.videoBeanModel!.consumption!.shareCount.toString()),
+                _buildActionButton(Icons.share_outlined, videoDetailVM.videoBeanModel!.consumption!.shareCount.toString()),
                 _buildActionButton(Icons.download_rounded, "缓存"),
                 _buildActionButton(Icons.star_border_outlined, "收藏")
               ],
@@ -254,7 +254,7 @@ class _ZCLDetailPageState extends State<ZCLDetailPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("# ${itemModel.data?.category ?? ""} / 开眼精选", style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white70),),
-                          Icon(Icons.add_to_home_screen_outlined, color: Colors.white70,)
+                          Icon(Icons.share_outlined, color: Colors.white70,)
                         ],
                       )
                     ],
@@ -271,7 +271,7 @@ class _ZCLDetailPageState extends State<ZCLDetailPage> {
       child: GestureDetector(
         onTap: (){
           Provider.of<ZCLVideoDetailNotifier>(context, listen: false).updateVideoId(itemModel.data!.id.toString());
-          Navigator.of(context).pushReplacementNamed(ZCLDetailPage.routeName);
+          Navigator.of(context).pushReplacementNamed(ZCLVideoDetailPage.routeName);
         },
         child: smallVideoItem
       )

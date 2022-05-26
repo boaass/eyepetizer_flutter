@@ -2,16 +2,22 @@ import 'package:dio/dio.dart';
 import 'config.dart';
 
 class HttpRequest {
-  static final BaseOptions baseOptions = BaseOptions(connectTimeout: HttpConfig.timeout);
+  static final BaseOptions baseOptions = BaseOptions(baseUrl: HttpConfig.apiBaseURL, connectTimeout: HttpConfig.timeout);
   static final Dio dio = Dio(baseOptions);
   static Future<T> request<T>(String url, {
                               String method = "get",
                               dynamic data,
                               Map<String, dynamic>? headers,
                               Map<String, dynamic>? params,
+                              String? contentType = Headers.formUrlEncodedContentType,
                               Interceptor? inter}) async {
+    var option;
     // 1. 创建单独配置
-    final option = Options(method: method, headers: headers);
+    if (null == contentType || contentType.length == 0) {
+      option = Options(method: method, headers: headers);
+    } else {
+      option = Options(method: method, headers: headers, contentType: contentType);
+    }
 
     // 全局；拦截器
     // 创建默认的全局拦截器

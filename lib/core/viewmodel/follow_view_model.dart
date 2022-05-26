@@ -33,7 +33,11 @@ class ZCLFollowViewModel extends ZCLBaseViewModel {
     lastParams["last_item_id"] = (lastParams["last_item_id"] as int) + 10;
     cardPageModel.cards!.last.api_request_params = lastParams;
     ZCLMetroListRequest.getData(lastParams).then((value) {
-      addMetroList(value);
+      addMetroList(value.itemList!);
+    }).catchError((error, stack) {
+      print("$error\n$stack");
+      lastParams["last_item_id"] = (lastParams["last_item_id"] as int) - 10;
+      cardPageModel.cards!.last.api_request_params = lastParams;
     });
   }
 
