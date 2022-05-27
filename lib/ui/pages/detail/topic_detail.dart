@@ -97,10 +97,17 @@ class _ZCLTopicDetailPageState extends State<ZCLTopicDetailPage> {
               ListView.builder(
                   padding: _isOnlyNavShow ? EdgeInsets.only(top: 100) : EdgeInsets.zero,
                   controller: _scrollController,
-                  itemCount: topicDetailVM.cardPageModel!.cards!.length,
+                  itemCount: topicDetailVM.cardPageModel!.cards!.length + 1,
                   itemBuilder: (ctx, index) {
                     if (!_isOnlyNavShow && index == 2) {
                       topicDetailVM.cardPageModel!.cards![index].body!.metro_list![0].stickyKey = stickyKey;
+                    }
+                    if (index == topicDetailVM.cardPageModel!.cards!.length) {
+                      return Container(
+                        margin: EdgeInsets.only(top: 20.px),
+                        alignment: Alignment.center,
+                        child: (topicDetailVM.cardPageModel!.cards!.last.body!.apiRequest != null) ? Icon(Icons.cached, color: Colors.black,) : Text("-The End-", style: Theme.of(context).textTheme.headline3!.copyWith(fontFamily: "Lobster"),),
+                      );
                     }
                     return ZCLCardWidget(model: topicDetailVM.cardPageModel!.cards![index], onTap: (navIndex) {
                       if (!_isOnlyNavShow) {
@@ -131,7 +138,7 @@ class _ZCLTopicDetailPageState extends State<ZCLTopicDetailPage> {
                         },
                         child: Icon(Icons.arrow_back_ios_outlined)
                       ),
-                      Text(_isOnlyNavShow ? topicDetailVM.cardPageModel?.pageInfo?.title ?? "" : "", style: Theme.of(context).textTheme.headline3!.copyWith(fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis,),
+                      Expanded(child: Text(_isOnlyNavShow ? topicDetailVM.cardPageModel?.pageInfo?.title ?? "" : "", style: Theme.of(context).textTheme.headline3!.copyWith(fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis,)),
                       Icon(Icons.share_outlined)
                     ],
                   ),

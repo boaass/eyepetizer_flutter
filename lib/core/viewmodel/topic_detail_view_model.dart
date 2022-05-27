@@ -67,6 +67,9 @@ class ZCLTopicDetailViewModel extends ZCLBaseViewModel {
   }
 
   requestMoreNavItem() {
+    if (cardPageModel!.cards!.last.body!.apiRequest == null) {
+      return;
+    }
     Map<String, dynamic> lastParams = cardPageModel!.cards!.last.body!.apiRequest!.params!.toJson();
     ZCLMetroListRequest.getData(lastParams).then((value) {
       addMetroList(value.itemList!);
