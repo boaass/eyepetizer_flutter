@@ -1,4 +1,4 @@
-import 'package:eyepetizer/core/viewmodel/daily.dart';
+import 'package:eyepetizer/core/viewmodel/daily_view_model.dart';
 import 'package:eyepetizer/ui/widgets/card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

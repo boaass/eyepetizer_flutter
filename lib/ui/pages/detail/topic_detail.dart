@@ -177,6 +177,7 @@ class _ZCLTopicDetailPageState extends State<ZCLTopicDetailPage> {
 
           if (_navBarInitPosY == 0) {
             _navBarInitPosY = pos.dy;
+            sticky!.remove();
           }
           // print("zcl --- ${box.size.height}, ${pos.dy}");
 

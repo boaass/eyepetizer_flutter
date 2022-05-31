@@ -43,7 +43,6 @@ class ZCLFollowViewModel extends ZCLBaseViewModel {
 
   ZCLFollowViewModel() {
     ZCLFollowRequest.getData().then<ZCLCardPageModel>((x) {
-      print(x.toJson());
       cardPageModel = x;
       return cardPageModel;
     }).onError((error, stackTrace) {

@@ -92,6 +92,9 @@ class ZCLTopicDetailViewModel extends ZCLBaseViewModel {
   }
 
   ZCLTopicDetailViewModel(String link) {
+    if (!link.contains("api_request=")) {
+      return;
+    }
     String str = link.split("api_request=").last;
     var decode = Uri.decodeFull(str);
     Map<String, dynamic> dataMap = Map.castFrom(json.decode(decode));

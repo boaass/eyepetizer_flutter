@@ -120,8 +120,11 @@ class _ZCLRecommendPageState extends State<ZCLRecommendPage> {
           final pos = box.localToGlobal(Offset.zero);
 
           // print("zcl --- ${box.size.height}, ${pos.dy}");
+          if (_firstItemHeight == 0) {
+            _firstItemHeight = box.size.height;
+            sticky!.remove();
+          }
 
-          _firstItemHeight = box.size.height;
 
           // sticky!.dispose();
           return Container();

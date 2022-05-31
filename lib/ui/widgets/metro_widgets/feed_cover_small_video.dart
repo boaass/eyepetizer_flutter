@@ -16,15 +16,20 @@ class ZCLFeedCoverSmallVideo extends StatelessWidget {
           border: Border.all(color: Colors.black54)
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              Image.network(model!.cover!),
-              Icon(Icons.play_arrow, color: Colors.white, size: 60.px,),
-            ],
+          Expanded(
+            flex: 1,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Image.network(model!.cover!, fit: BoxFit.fill,),
+                Icon(Icons.play_arrow, color: Colors.white, size: 60.px,),
+              ],
+            ),
           ),
           Expanded(
+            flex: 1,
             child: Container(
               margin: EdgeInsets.fromLTRB(10.px, 5.px, 10.px, 5.px),
               child: Column(

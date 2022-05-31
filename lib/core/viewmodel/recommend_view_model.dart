@@ -48,7 +48,6 @@ class ZCLRecommendViewModel extends ZCLBaseViewModel {
 
   ZCLRecommendViewModel() {
     ZCLRecommendRequest.getData().then<ZCLCardPageModel>((x) {
-      print(x.toJson());
       cardPageModel = x;
       return cardPageModel;
     }).onError((error, stackTrace) {

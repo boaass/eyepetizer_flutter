@@ -1,5 +1,6 @@
 import 'package:eyepetizer/core/model/card_model.dart';
 import 'package:eyepetizer/core/viewmodel/topic_detail_view_model.dart';
+import 'package:eyepetizer/ui/pages/detail/topic_detai_tag.dart';
 import 'package:eyepetizer/ui/pages/detail/topic_detail.dart';
 import 'package:eyepetizer/ui/widgets/metro_widget.dart';
 import 'package:flutter/material.dart';
@@ -90,8 +91,9 @@ class _ZCLCardWidgetState extends State<ZCLCardWidget> {
               _indexNotifier.value = index+1;
             },
             onTap: (index) {
-              Provider.of<ZCLTopicDetailNotifier>(context, listen: false).link = widget.model!.body!.metro_list![index].link!;
-              Navigator.of(context).pushNamed(ZCLTopicDetailPage.routeName);
+              String link = widget.model!.body!.metro_list![index].link!;
+              Provider.of<ZCLTopicDetailNotifier>(context, listen: false).link = link;
+              Navigator.of(context).pushNamed(_routeNameFromLink(link));
             },
           ),
         ),
@@ -130,6 +132,14 @@ class _ZCLCardWidgetState extends State<ZCLCardWidget> {
         _buildDivider()
       ],
     );
+  }
+
+  _routeNameFromLink(String link) {
+    if (link.startsWith("eyepetizer://tag")) {
+      return ZCLTopicDetailTagPage.routeName;
+    } else {
+      return ZCLTopicDetailPage.routeName;
+    }
   }
 
   _buildDivider() {
