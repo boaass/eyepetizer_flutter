@@ -12,6 +12,8 @@ class ZCLAppTheme {
 
   static final titleFontStyle = TextStyle(fontFamily: "Lobster");
 
+  static final String fontFamily = "Lobster";
+
 
   static final MaterialColor white = const MaterialColor(
     0xFFFFFFFF,

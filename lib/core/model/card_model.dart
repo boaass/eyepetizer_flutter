@@ -7,9 +7,9 @@ class ZCLCard {
   final ZCLBody? body;
   final ZCLFooter? footer;
   final String? create_source;
-  Map<String, dynamic>? api_request_params;
+  final ApiRequest? apiRequest;
 
-  ZCLCard({this.card_id, this.type, this.header, this.body, this.footer, this.api_request_params, this.create_source});
+  ZCLCard({this.card_id, this.type, this.header, this.body, this.footer, this.apiRequest, this.create_source});
 
   factory ZCLCard.fromJson(Map<String, dynamic>? json) => ZCLCard(
     card_id: json?["card_id"] ?? "",
@@ -17,7 +17,7 @@ class ZCLCard {
     header: ZCLHeader.fromJson(json?["card_data"]?["header"] ?? {}),
     body: ZCLBody.fromJson(json?["card_data"]?["body"] ?? {}),
     footer: ZCLFooter.fromJson(json?["card_data"]?["footer"] ?? {}),
-    api_request_params: json?["card_data"]?["body"]?["api_request"]?["params"] ?? {},
+    apiRequest: json?["card_data"]?["body"]?["api_request"] == null ? null : ApiRequest.fromJson(json?["card_data"]?["body"]?["api_request"])  ,
     create_source: json?["create_source"] ?? ""
   );
 
@@ -27,7 +27,32 @@ class ZCLCard {
     "header": header?.toJson(),
     "body": body?.toJson(),
     "footer": footer?.toJson(),
-    "create_source": create_source
+    "create_source": create_source,
+    "apiRequest": apiRequest?.toJson(),
+  };
+}
+
+class ZCLCardList {
+  ZCLCardList({
+    this.itemList,
+    this.itemCount,
+    this.lastItemId,
+  });
+
+  List<ZCLCard>? itemList;
+  int? itemCount;
+  String? lastItemId;
+
+  factory ZCLCardList.fromJson(Map<String, dynamic> json) => ZCLCardList(
+    itemList: json["item_list"] == null ? null : List<ZCLCard>.from(json["item_list"].map((x) => ZCLCard.fromJson(x))),
+    itemCount: json["item_count"] == null ? null : json["item_count"],
+    lastItemId: json["last_item_id"] == null ? null : json["last_item_id"].toString(),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "item_list": itemList == null ? null : List<dynamic>.from(itemList!.map((x) => x.toJson())),
+    "item_count": itemCount == null ? null : itemCount,
+    "last_item_id": lastItemId == null ? null : lastItemId,
   };
 }
 
@@ -56,7 +81,7 @@ class ZCLMertroList {
 }
 
 class ZCLMetro {
-  final int? metro_id;
+  final String? metro_id;
   final String? type;
   final String? video_id;
   final String? title;
@@ -116,10 +141,10 @@ class ZCLMetro {
   });
 
   factory ZCLMetro.fromJson(Map<String, dynamic>? json) => ZCLMetro(
-    metro_id: json?["metro_id"] ?? "",
+    metro_id: json?["metro_id"].toString() ?? "",
     type: json?["type"] ?? "",
-    video_id: json?["metro_data"]["video_id"] ?? "",
-    title: json?["metro_data"]["title"] ?? "",
+    video_id: json?["metro_data"]?["video_id"] == null ? null : json?["metro_data"]["video_id"],
+    title: json?["metro_data"]?["title"] ?? "",
     duration: ZCLDuration.fromJson(json?["metro_data"]?["duration"]),
     autoplay: json?["metro_data"]?["play_ctrl"]?["autoplay"] ?? false,
     play_url: json?["metro_data"]?["play_url"] ?? "",
@@ -259,6 +284,7 @@ class Params {
     this.lastItemId,
     this.pageLabel,
     this.pageParams,
+    this.cardList,
   });
 
   String? card;
@@ -270,6 +296,7 @@ class Params {
   String? lastItemId;
   String? pageLabel;
   String? pageParams;
+  String? cardList;
 
   factory Params.fromJson(Map<String, dynamic> json) => Params(
     card: json["card"] == null ? null : json["card"],
@@ -281,6 +308,7 @@ class Params {
     lastItemId: json["last_item_id"] == null ? null : json["last_item_id"].toString(),
     pageLabel: json["page_label"] == null ? null : json["page_label"],
     pageParams: json["page_params"] == null ? null : json["page_params"],
+    cardList: json["card_list"] == null ? null : json["card_list"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -293,6 +321,7 @@ class Params {
     "last_item_id": lastItemId == null ? null : lastItemId,
     "page_label": pageLabel == null ? null : pageLabel,
     "page_params": pageParams == null ? null : pageParams,
+    "card_list": cardList == null ? null : cardList,
   };
 }
 
@@ -403,15 +432,18 @@ class ZCLConsumption {
 
 class ZCLAvatar {
   final String? url;
+  final ImageInfo? imageInfo;
 
-  ZCLAvatar({this.url});
+  ZCLAvatar({this.url, this.imageInfo});
 
   factory ZCLAvatar.fromJson(Map<String, dynamic> json) => ZCLAvatar(
-    url: json["url"]
+    url: json["url"],
+    imageInfo: json["img_info"] == null ? null : ImageInfo.fromJson(json["img_info"])
   );
 
   Map<String, dynamic> toJson() => {
-    "url": url
+    "url": url,
+    "imageInfo": imageInfo?.toJson()
   };
 }
 
@@ -534,8 +566,8 @@ class ImageInfo {
   int? scale;
 
   factory ImageInfo.fromJson(Map<String, dynamic> json) => ImageInfo(
-    width: json["width"] == null ? null : json["width"],
-    height: json["height"] == null ? null : json["height"],
+    width: json["width"] == null ? null : json["width"].toInt(),
+    height: json["height"] == null ? null : json["height"].toInt(),
     scale: json["scale"] == null ? null : json["scale"].toInt(),
   );
 
@@ -573,6 +605,8 @@ class MetroData {
     this.showFollowBtn,
     this.showMoreBtn,
     this.moreOption,
+    this.cover,
+    this.avatar,
   });
 
   String? type;
@@ -600,6 +634,8 @@ class MetroData {
   bool? showFollowBtn;
   bool? showMoreBtn;
   List<ZCLMoreOption>? moreOption;
+  Cover? cover;
+  ZCLAvatar? avatar;
 
   factory MetroData.fromJson(Map<String, dynamic> json) => MetroData(
     type: json["type"] == null ? null : json["type"],
@@ -627,6 +663,8 @@ class MetroData {
     showFollowBtn: json["show_follow_btn"] == null ? null : json["show_follow_btn"],
     showMoreBtn: json["show_more_btn"] == null ? null : json["show_more_btn"],
     moreOption: json["more_option"] == null ? null : List<ZCLMoreOption>.from(json["more_option"].map((x) => ZCLMoreOption.fromJson(x))),
+    cover: json["cover"] == null ? null : Cover.fromJson(json["cover"]),
+    avatar: json["avatar"] == null ? null : ZCLAvatar.fromJson(json["avatar"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -655,6 +693,8 @@ class MetroData {
     "show_follow_btn": showFollowBtn == null ? null : showFollowBtn,
     "show_more_btn": showMoreBtn == null ? null : showMoreBtn,
     "more_option": moreOption == null ? null : List<dynamic>.from(moreOption!.map((x) => x.toJson())),
+    "cover": cover == null ? null : cover!.toJson(),
+    "avatar": avatar == null ? null : avatar!.toJson(),
   };
 }
 

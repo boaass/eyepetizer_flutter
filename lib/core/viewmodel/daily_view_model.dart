@@ -29,10 +29,10 @@ class ZCLDailyViewModel extends ZCLBaseViewModel {
   }
 
   requestMoreMetros() {
-    Map<String, dynamic> lastParams = cardPageModel.cards!.last.api_request_params!;
-    lastParams["last_item_id"] = (lastParams["last_item_id"] as int) + 10;
-    cardPageModel.cards!.last.api_request_params = lastParams;
-    ZCLMetroListRequest.getData(lastParams).then((value) {
+    Params lastParams = cardPageModel.cards!.last.apiRequest!.params!;
+    lastParams.lastItemId = (int.parse(lastParams.lastItemId!) + 10).toString();
+    cardPageModel.cards!.last.apiRequest!.params = lastParams;
+    ZCLMetroListRequest.getData(cardPageModel.cards!.last.apiRequest!.url!, lastParams.toJson()).then((value) {
       addMetroList(value.itemList!);
     });
   }

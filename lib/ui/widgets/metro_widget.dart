@@ -8,14 +8,18 @@ import 'package:eyepetizer/ui/widgets/metro_widgets/feed_cover_large_image.dart'
 import 'package:eyepetizer/ui/widgets/metro_widgets/feed_cover_large_video.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/feed_cover_small_video.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/feed_item_detail.dart';
+import 'package:eyepetizer/ui/widgets/metro_widgets/more_link.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/normal_text.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/refresh_button.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/rich_text_detail.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/slide_cover_image.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/slide_cover_image_with_footer.dart';
+import 'package:eyepetizer/ui/widgets/metro_widgets/slide_cover_image_with_title.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/slide_cover_video.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/slide_user.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/topic_intro.dart';
+import 'package:eyepetizer/ui/widgets/metro_widgets/waterfall_cover_small_image.dart';
+import 'package:eyepetizer/ui/widgets/metro_widgets/waterfall_cover_small_video.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,6 +39,10 @@ enum ZCLMetroType {
   topic_intro,
   rich_text_detail,
   default_nav,
+  waterfall_cover_small_image,
+  waterfall_cover_small_video,
+  more_link,
+  slide_cover_image_with_title,
 }
 class ZCLMetroWidget extends StatefulWidget {
 
@@ -78,6 +86,14 @@ class ZCLMetroWidget extends StatefulWidget {
       _metroType = ZCLMetroType.rich_text_detail;
     } else if (model!.style!.tpl_label == "default_nav") {
       _metroType = ZCLMetroType.default_nav;
+    } else if (model!.style!.tpl_label == "waterfall_cover_small_image") {
+      _metroType = ZCLMetroType.waterfall_cover_small_image;
+    } else if (model!.style!.tpl_label == "waterfall_cover_small_video") {
+      _metroType = ZCLMetroType.waterfall_cover_small_video;
+    } else if (model!.style!.tpl_label == "more_link") {
+      _metroType = ZCLMetroType.more_link;
+    } else if (model!.style!.tpl_label == "slide_cover_image_with_title") {
+      _metroType = ZCLMetroType.slide_cover_image_with_title;
     } else {
       assert(true, "Unknow metro type");
     }
@@ -147,6 +163,18 @@ class _ZCLMetroWidgetState extends State<ZCLMetroWidget> {
         break;
       case ZCLMetroType.default_nav:
         metroWidget = ZCLDefaultNav(model: widget.model, navIndex: widget.navIndex, onTap: widget.onTap,);
+        break;
+      case ZCLMetroType.waterfall_cover_small_image:
+        metroWidget = ZCLWaterfallCoverSmallImage(model: widget.model!);
+        break;
+      case ZCLMetroType.waterfall_cover_small_video:
+        metroWidget = ZCLWaterfallCoverSmallVideo(model: widget.model!);
+        break;
+      case ZCLMetroType.more_link:
+        metroWidget = ZCLMoreLink(model: widget.model!);
+        break;
+      case ZCLMetroType.slide_cover_image_with_title:
+        metroWidget = ZCLSlideCoverImageWithTitle(model: widget.model!);
         break;
       case null:
         metroWidget = Container();

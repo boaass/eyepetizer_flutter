@@ -71,7 +71,7 @@ class ZCLTopicDetailViewModel extends ZCLBaseViewModel {
       return;
     }
     Map<String, dynamic> lastParams = cardPageModel!.cards!.last.body!.apiRequest!.params!.toJson();
-    ZCLMetroListRequest.getData(lastParams).then((value) {
+    ZCLMetroListRequest.getData(cardPageModel!.cards!.last.body!.apiRequest!.url!, lastParams).then((value) {
       addMetroList(value.itemList!);
       cardPageModel!.cards!.last.body!.apiRequest!.params!.lastItemId = value.lastItemId;
     }).catchError((error, stack) {

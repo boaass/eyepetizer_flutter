@@ -31,7 +31,7 @@ class ZCLRouter {
     ZCLMessagePage.routeName: (ctx) => ZCLMessagePage(),
     ZCLVideoDetailPage.routeName: (ctx) => ZCLVideoDetailPage(),
     ZCLTopicDetailPage.routeName: (ctx) => ZCLTopicDetailPage(),
-    ZCLTopicDetailTagPage.routeName: (ctx) => ZCLTopicDetailTagPage()
+    ZCLTopicDetailTagPage.routeName: (ctx) => ZCLTopicDetailTagPage(),
   };
 
   static final RouteFactory unknowRoute = (settings) {

@@ -58,7 +58,7 @@ class _ZCLRecommendPageState extends State<ZCLRecommendPage> {
 
   @override
   void dispose() {
-    sticky!.remove();
+    sticky?.dispose();
     // _scrollController.dispose(); // 被其他控件引用时，会被其他控件 dispose()，重复 dispose() 报错
 
     super.dispose();
