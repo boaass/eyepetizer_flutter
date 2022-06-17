@@ -2,6 +2,7 @@ import 'package:eyepetizer/core/viewmodel/community_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/daily_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/follow_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/recommend_view_model.dart';
+import 'package:eyepetizer/core/viewmodel/topic_detail_light_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/topic_detail_tag_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/topic_detail_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/video_detail_view_model.dart';
@@ -30,6 +31,9 @@ main() {
         ChangeNotifierProxyProvider<ZCLTopicDetailNotifier, ZCLTopicDetailTagViewModel>(
             create: (ctx) => ZCLTopicDetailTagViewModel(Provider.of<ZCLTopicDetailNotifier>(ctx, listen: false).link),
             update: (ctx, notifier, topicDetailTagVM) => ZCLTopicDetailTagViewModel(Provider.of<ZCLTopicDetailNotifier>(ctx, listen: false).link)),
+        ChangeNotifierProxyProvider<ZCLTopicDetailNotifier, ZCLTopicDetailLightViewModel>(
+            create: (ctx) => ZCLTopicDetailLightViewModel(Provider.of<ZCLTopicDetailNotifier>(ctx, listen: false).link),
+            update: (ctx, notifier, topicDetailLightVM) => ZCLTopicDetailLightViewModel(Provider.of<ZCLTopicDetailNotifier>(ctx, listen: false).link)),
         ChangeNotifierProvider(create: (ctx) => ZCLCommunityViewModel()),
       ],
       child: MyApp()

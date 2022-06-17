@@ -1,3 +1,4 @@
+import 'package:eyepetizer/core/model/topic_detail_tag_model.dart';
 import 'package:eyepetizer/core/model/video_bean_model.dart';
 import 'package:eyepetizer/core/model/video_related_model.dart';
 import 'package:eyepetizer/core/model/video_replies_model.dart';
@@ -216,30 +217,36 @@ class _ZCLVideoDetailPageState extends State<ZCLVideoDetailPage> {
     );
   }
   
-  _buildSmallVideoItem(ItemList itemModel) {
+  _buildSmallVideoItem(RelatedItemList itemModel) {
     Widget smallVideoItem = Container();
     // print("zcl --- itemModel --- ${itemModel.toJson()}");
     if (itemModel.type == ItemListType.VIDEO_SMALL_CARD) {
-      if (itemModel.data!.dataType == DataType.VIDEO_BEAN_FOR_CLIENT) {
+      if (itemModel.data!.dataType == ContentDataType.VIDEO_BEAN_FOR_CLIENT) {
         smallVideoItem = Container(
           height: 100.px,
           child: Row(
             children: [
               Expanded(
-                child: Stack(
-                    alignment: Alignment.bottomRight,
+                child: Container(
+                  child: Stack(
+                    fit: StackFit.expand,
                     children: [
-                      Image.network(itemModel.data?.cover?.feed ?? "", fit: BoxFit.cover,),
-                      Container(
-                        margin: EdgeInsets.fromLTRB(0, 0, 5.px, 5.px),
-                        padding: EdgeInsets.symmetric(horizontal: 5.px),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white),
-                            borderRadius: BorderRadius.all(Radius.circular(20.px))
+                      Image.network(itemModel.data?.cover?.feed ?? "", fit: BoxFit.fill),
+                      Positioned(
+                        bottom: 2.px,
+                        right: 2.px,
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(0, 0, 5.px, 5.px),
+                          padding: EdgeInsets.symmetric(horizontal: 5.px),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.white),
+                              borderRadius: BorderRadius.all(Radius.circular(20.px))
+                          ),
+                          child: Text(_secondToTimeText(itemModel.data?.duration ?? 0), style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white70),),
                         ),
-                        child: Text(_secondToTimeText(itemModel.data?.duration ?? 0), style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white70),),
                       )
                     ]
+                  ),
                 ),
               ),
               Expanded(
@@ -270,7 +277,7 @@ class _ZCLVideoDetailPageState extends State<ZCLVideoDetailPage> {
       padding: EdgeInsets.symmetric(horizontal: 10.px),
       child: GestureDetector(
         onTap: (){
-          Provider.of<ZCLVideoDetailNotifier>(context, listen: false).updateVideoId(itemModel.data!.id.toString());
+          Provider.of<ZCLVideoDetailNotifier>(context, listen: false).updateVideoId(itemModel.data!.id!.toString());
           Navigator.of(context).pushReplacementNamed(ZCLVideoDetailPage.routeName);
         },
         child: smallVideoItem

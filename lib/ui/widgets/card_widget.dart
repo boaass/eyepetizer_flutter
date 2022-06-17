@@ -1,6 +1,7 @@
 import 'package:eyepetizer/core/model/card_model.dart';
 import 'package:eyepetizer/core/viewmodel/topic_detail_view_model.dart';
-import 'package:eyepetizer/ui/pages/detail/topic_detai_tag.dart';
+import 'package:eyepetizer/ui/pages/detail/topic_detail_light.dart';
+import 'package:eyepetizer/ui/pages/detail/topic_detail_tag.dart';
 import 'package:eyepetizer/ui/pages/detail/topic_detail.dart';
 import 'package:eyepetizer/ui/shared/size_fit.dart';
 import 'package:eyepetizer/ui/widgets/metro_widget.dart';
@@ -150,6 +151,8 @@ class _ZCLCardWidgetState extends State<ZCLCardWidget> {
   _routeNameFromLink(String link) {
     if (link.startsWith("eyepetizer://tag")) {
       return ZCLTopicDetailTagPage.routeName;
+    } else if (link.startsWith("eyepetizer://lightTopic")) {
+      return ZCLTopicDetailLightPage.routeName;
     } else {
       return ZCLTopicDetailPage.routeName;
     }

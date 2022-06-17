@@ -76,8 +76,7 @@ class _ZCLUGCVideoBeanWidgetState extends State<ZCLUGCVideoBeanWidget> {
                         .textTheme
                         .headline3!
                         .copyWith(fontWeight: FontWeight.bold)),
-                subtitle: Text("${_formatTimestamp(widget.item.data!.content!
-                    .data!.createTime!)} 发布:"),
+                subtitle: Text("${_formatTimestamp(widget.item.data!.content!.data!.createTime!)} 发布:"),
                 trailing: widget.item.data!.header!.topShow! ? Container(
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.blue),

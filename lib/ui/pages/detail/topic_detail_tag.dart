@@ -8,7 +8,6 @@ import 'package:eyepetizer/ui/shared/size_fit.dart';
 import 'package:eyepetizer/ui/widgets/detail_widgets/ugc_picture_bean_widget.dart';
 import 'package:eyepetizer/ui/widgets/detail_widgets/ugc_video_bean_widget.dart';
 import 'package:eyepetizer/ui/widgets/expandable_pageview.dart';
-import 'package:eyepetizer/ui/widgets/expandable_text.dart';
 import 'package:eyepetizer/ui/widgets/slider_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -273,7 +272,7 @@ class _ZCLTopicDetailTagPageState extends State<ZCLTopicDetailTagPage> {
     );
   }
 
-  _buildTabPage(ZCLTopicDetailTag? tags) {
+  _buildTabPage(ZCLTopicDetailTagModel? tags) {
     return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -289,12 +288,12 @@ class _ZCLTopicDetailTagPageState extends State<ZCLTopicDetailTagPage> {
   _buildPageItem(ItemList item) {
     Widget widget = Container();
     if (item.type == ItemListType.PICTURE_FOLLOW_CARD || item.type == ItemListType.AUTO_PLAY_FOLLOW_CARD) {
-      if (item.data!.dataType == FluffyDataType.FOLLOW_CARD) {
+      if (item.data!.dataType == ItemListDataType.FOLLOW_CARD) {
         if (item.data!.content!.type == ContentType.UGC_PICTURE || item.data!.content!.type == ContentType.VIDEO) {
           if (item.data!.content!.data!.dataType ==
-              PurpleDataType.UGC_PICTURE_BEAN) {
+              ContentDataType.UGC_PICTURE_BEAN) {
             widget = ZCLUGCPictureBeanWidget(item: item);
-          } else if (item.data!.content!.data!.dataType == PurpleDataType.UGC_VIDEO_BEAN) {
+          } else if (item.data!.content!.data!.dataType == ContentDataType.UGC_VIDEO_BEAN) {
             widget = ZCLUGCVideoBeanWidget(item: item);
           }
         }

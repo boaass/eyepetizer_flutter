@@ -3,15 +3,15 @@ import 'package:eyepetizer/core/model/topic_detail_tag_model.dart';
 import 'package:eyepetizer/core/services/tabinfo_request.dart';
 import 'package:eyepetizer/core/services/topic_detail_tag_request.dart';
 import 'package:eyepetizer/core/viewmodel/base_view_model.dart';
-import 'package:flutter/material.dart';
+
 
 class ZCLTopicDetailTagViewModel extends ZCLBaseViewModel {
   int initTabIndex = 0;
   ZCLTabInfo? _tabInfo;
-  // ZCLTopicDetailTag? _dynamics;
-  // ZCLTopicDetailTag? _videos;
+  // ZCLTopicDetailTagModel? _dynamics;
+  // ZCLTopicDetailTagModel? _videos;
 
-  List<ZCLTopicDetailTag?> _tabs = [null, null];
+  List<ZCLTopicDetailTagModel?> _tabs = [null, null];
 
   ZCLTabInfo? get tabInfo => _tabInfo;
   set tabInfo(ZCLTabInfo? tabInfo) {
@@ -19,25 +19,25 @@ class ZCLTopicDetailTagViewModel extends ZCLBaseViewModel {
     notifyListeners();
   }
 
-  // ZCLTopicDetailTag? get dynamics => _dynamics;
-  // set dynamics(ZCLTopicDetailTag? dynamics) {
+  // ZCLTopicDetailTagModel? get dynamics => _dynamics;
+  // set dynamics(ZCLTopicDetailTagModel? dynamics) {
   //   _dynamics = dynamics;
   //   notifyListeners();
   // }
   //
-  // ZCLTopicDetailTag? get videos => _videos;
-  // set videos(ZCLTopicDetailTag? videos) {
+  // ZCLTopicDetailTagModel? get videos => _videos;
+  // set videos(ZCLTopicDetailTagModel? videos) {
   //   _videos = videos;
   //   notifyListeners();
   // }
 
-  List<ZCLTopicDetailTag?> get tabs => _tabs;
-  set tabs(List<ZCLTopicDetailTag?> tabs) {
+  List<ZCLTopicDetailTagModel?> get tabs => _tabs;
+  set tabs(List<ZCLTopicDetailTagModel?> tabs) {
     _tabs = tabs;
     notifyListeners();
   }
 
-  updateTabs(int index, ZCLTopicDetailTag? tab) {
+  updateTabs(int index, ZCLTopicDetailTagModel? tab) {
     _tabs[index] = tab;
     notifyListeners();
   }

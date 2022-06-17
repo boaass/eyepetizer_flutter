@@ -5,7 +5,7 @@ import 'http_request.dart';
 
 
 class ZCLTopicDetailTagRequest {
-  static Future<ZCLTopicDetailTag> getData(String url) async {
+  static Future<ZCLTopicDetailTagModel> getData(String url) async {
 
     var headers = {
       'Cookie': 'ky_auth=;sdk=28',
@@ -20,6 +20,6 @@ class ZCLTopicDetailTagRequest {
     };
 
     final result = await HttpRequest.request(url, headers: headers, params: params);
-    return ZCLTopicDetailTag.fromJson(result);
+    return ZCLTopicDetailTagModel.fromJson(result);
   }
 }
