@@ -62,6 +62,7 @@ class _ZCLUGCPictureBeanWidgetState extends State<ZCLUGCPictureBeanWidget> {
                 .headline3,
             expand: false,
           ),
+          widget.item.data!.content!.data!.tags == null ? Container() :
           Container(
             margin: EdgeInsets.only(top: 10.px),
             padding: EdgeInsets.symmetric(horizontal: 8.px),

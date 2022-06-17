@@ -3,6 +3,7 @@ import 'package:eyepetizer/core/viewmodel/topic_detail_view_model.dart';
 import 'package:eyepetizer/ui/pages/detail/topic_detail_light.dart';
 import 'package:eyepetizer/ui/pages/detail/topic_detail_tag.dart';
 import 'package:eyepetizer/ui/pages/detail/topic_detail.dart';
+import 'package:eyepetizer/ui/shared/Utils.dart';
 import 'package:eyepetizer/ui/shared/size_fit.dart';
 import 'package:eyepetizer/ui/widgets/metro_widget.dart';
 import 'package:flutter/material.dart';
@@ -107,7 +108,7 @@ class _ZCLCardWidgetState extends State<ZCLCardWidget> {
             onTap: (index) {
               String link = widget.model!.body!.metro_list![index].link!;
               Provider.of<ZCLTopicDetailNotifier>(context, listen: false).link = link;
-              Navigator.of(context).pushNamed(_routeNameFromLink(link));
+              _jumpPageFromLink(link);
             },
           ),
         ),
@@ -148,13 +149,15 @@ class _ZCLCardWidgetState extends State<ZCLCardWidget> {
     );
   }
 
-  _routeNameFromLink(String link) {
+  _jumpPageFromLink(String link) {
     if (link.startsWith("eyepetizer://tag")) {
-      return ZCLTopicDetailTagPage.routeName;
+      Navigator.of(context).pushNamed(ZCLTopicDetailTagPage.routeName);
     } else if (link.startsWith("eyepetizer://lightTopic")) {
-      return ZCLTopicDetailLightPage.routeName;
+      Navigator.of(context).pushNamed(ZCLTopicDetailLightPage.routeName);
+    } else if (link.startsWith("https://")) {
+      ZCLUtils.launchUrl(link);
     } else {
-      return ZCLTopicDetailPage.routeName;
+      Navigator.of(context).pushNamed(ZCLTopicDetailPage.routeName);
     }
   }
 
