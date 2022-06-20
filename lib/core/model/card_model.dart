@@ -607,6 +607,7 @@ class MetroData {
     this.moreOption,
     this.cover,
     this.avatar,
+    this.imageCount
   });
 
   String? type;
@@ -636,6 +637,7 @@ class MetroData {
   List<ZCLMoreOption>? moreOption;
   Cover? cover;
   ZCLAvatar? avatar;
+  int? imageCount;
 
   factory MetroData.fromJson(Map<String, dynamic> json) => MetroData(
     type: json["type"] == null ? null : json["type"],
@@ -665,6 +667,7 @@ class MetroData {
     moreOption: json["more_option"] == null ? null : List<ZCLMoreOption>.from(json["more_option"].map((x) => ZCLMoreOption.fromJson(x))),
     cover: json["cover"] == null ? null : Cover.fromJson(json["cover"]),
     avatar: json["avatar"] == null ? null : ZCLAvatar.fromJson(json["avatar"]),
+    imageCount: json["image_count"] == null ? null : json["image_count"]
   );
 
   Map<String, dynamic> toJson() => {
@@ -695,6 +698,7 @@ class MetroData {
     "more_option": moreOption == null ? null : List<dynamic>.from(moreOption!.map((x) => x.toJson())),
     "cover": cover == null ? null : cover!.toJson(),
     "avatar": avatar == null ? null : avatar!.toJson(),
+    "image_count": imageCount == null ? null : imageCount
   };
 }
 

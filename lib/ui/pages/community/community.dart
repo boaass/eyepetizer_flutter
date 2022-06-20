@@ -1,4 +1,5 @@
 import 'package:eyepetizer/core/model/card_model.dart';
+import 'package:eyepetizer/core/services/comunity_request.dart';
 import 'package:eyepetizer/core/viewmodel/community_view_model.dart';
 import 'package:eyepetizer/ui/shared/app_theme.dart';
 import 'package:eyepetizer/ui/widgets/card_widget.dart';
@@ -38,13 +39,19 @@ class _ZCLCommunityPageState extends State<ZCLCommunityPage> {
         return Scaffold(
           appBar: _buidlAppBar(ctx),
           body: communityVM.cardPageModel.cards == null ? Container() :
-          ListView.builder(
-            shrinkWrap: true,
-            controller: _scrollController,
-              itemCount: communityVM.cardPageModel.cards!.length,
-            itemBuilder: (ctx, index) {
-              return ZCLCardWidget(model: communityVM.cardPageModel.cards![index]);
-            }
+          RefreshIndicator(
+            color: Colors.black,
+            onRefresh: () {
+              return communityVM.update();
+            },
+            child: ListView.builder(
+              shrinkWrap: true,
+              controller: _scrollController,
+                itemCount: communityVM.cardPageModel.cards!.length,
+              itemBuilder: (ctx, index) {
+                return ZCLCardWidget(model: communityVM.cardPageModel.cards![index]);
+              }
+            ),
           ),
         );
       },

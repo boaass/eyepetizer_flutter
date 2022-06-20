@@ -154,6 +154,10 @@ class _ZCLCardWidgetState extends State<ZCLCardWidget> {
       Navigator.of(context).pushNamed(ZCLTopicDetailTagPage.routeName);
     } else if (link.startsWith("eyepetizer://lightTopic")) {
       Navigator.of(context).pushNamed(ZCLTopicDetailLightPage.routeName);
+    } else if (link.startsWith("eyepetizer://webview")) {
+      String encodeUrl = link.split("url=").last;
+      String decodeUrl = Uri.decodeFull(encodeUrl);
+      ZCLUtils.launchUrl(decodeUrl);
     } else if (link.startsWith("https://")) {
       ZCLUtils.launchUrl(link);
     } else {

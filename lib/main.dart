@@ -5,6 +5,7 @@ import 'package:eyepetizer/core/viewmodel/recommend_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/topic_detail_light_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/topic_detail_tag_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/topic_detail_view_model.dart';
+import 'package:eyepetizer/core/viewmodel/ugc_pic_detail_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/video_detail_view_model.dart';
 import 'package:flutter/material.dart';
 
@@ -34,6 +35,9 @@ main() {
         ChangeNotifierProxyProvider<ZCLTopicDetailNotifier, ZCLTopicDetailLightViewModel>(
             create: (ctx) => ZCLTopicDetailLightViewModel(Provider.of<ZCLTopicDetailNotifier>(ctx, listen: false).link),
             update: (ctx, notifier, topicDetailLightVM) => ZCLTopicDetailLightViewModel(Provider.of<ZCLTopicDetailNotifier>(ctx, listen: false).link)),
+        ChangeNotifierProxyProvider<ZCLTopicDetailNotifier, ZCLUgcPicDetailViewModel>(
+            create: (ctx) => ZCLUgcPicDetailViewModel(Provider.of<ZCLTopicDetailNotifier>(ctx, listen: false).link),
+            update: (ctx, notifier, ugcPicDetailVM) => ZCLUgcPicDetailViewModel(Provider.of<ZCLTopicDetailNotifier>(ctx, listen: false).link)),
         ChangeNotifierProvider(create: (ctx) => ZCLCommunityViewModel()),
       ],
       child: MyApp()

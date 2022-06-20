@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:eyepetizer/core/model/card_model.dart';
 import 'package:eyepetizer/core/services/config.dart';
 import 'http_request.dart';
