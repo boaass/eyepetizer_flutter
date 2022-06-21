@@ -174,15 +174,29 @@ class _ZCLCardWidgetState extends State<ZCLCardWidget> {
   }
 
   _buildSetMetroListCard() {
-    List<Widget> headers = List.from(widget.model!.header!.left!.map((e) => ZCLMetroWidget(model: e,)))
+    List<Widget> lefts = List.from(widget.model!.header!.left!.map((e) => ZCLMetroWidget(model: e,)));
+    List<Widget> rights = List.from(widget.model!.header!.right!.map((e) => ZCLMetroWidget(model: e,)));
+    final header = Container(
+      padding: EdgeInsets.only(right: 10.px),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(children: lefts),
+          Row(children: rights)
+        ],
+      ),
+    );
+    List.from(widget.model!.header!.left!.map((e) => ZCLMetroWidget(model: e,)))
         ..addAll(List.from(widget.model!.header!.right!.map((e) => ZCLMetroWidget(model: e,))));
     List<Widget> bodys = List.from(widget.model!.body!.metro_list!.map((v) => ZCLMetroWidget(model: v, onTap: widget.onTap, navIndex: widget.navIndex,)));
     List<Widget> footers = List.from(widget.model!.footer!.left!.map((e) => ZCLMetroWidget(model: e,)))
       ..addAll(List.from(widget.model!.footer!.right!.map((e) => ZCLMetroWidget(model: e,))));
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: headers..addAll(bodys)..addAll(footers),
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [header]..addAll(bodys)..addAll(footers),
+      ),
     );
   }
 
@@ -194,7 +208,7 @@ class _ZCLCardWidgetState extends State<ZCLCardWidget> {
 
   _buildSetSlideMetroListCard() {
     return Container(
-      margin: EdgeInsets.fromLTRB(10.px, 30.px, 10.px, 10.px),
+      margin: EdgeInsets.fromLTRB(0.px, 30.px, 10.px, 0.px),
       child: Column(
         children: [
           Row(

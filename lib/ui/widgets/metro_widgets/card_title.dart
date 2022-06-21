@@ -9,6 +9,9 @@ class ZCLCardTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(model!.text!, style: Theme.of(context).textTheme.headline2!);
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 15.px),
+      child: Text(model!.text!, style: Theme.of(context).textTheme.headline2!)
+    );
   }
 }

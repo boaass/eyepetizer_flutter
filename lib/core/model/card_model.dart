@@ -109,6 +109,7 @@ class ZCLMetro {
   GlobalKey? stickyKey;
   final Background? background;
   final MetroData? metroData;
+  final List<MetroItem>? itemList;
 
   ZCLMetro({
     this.metro_id,
@@ -138,6 +139,7 @@ class ZCLMetro {
     this.is_ad,
     this.background,
     this.metroData,
+    this.itemList,
   });
 
   factory ZCLMetro.fromJson(Map<String, dynamic>? json) => ZCLMetro(
@@ -166,7 +168,8 @@ class ZCLMetro {
     video: ZCLVideo.fromJson(json?["metro_data"]?["video"] ?? {}),
     is_ad: json?["metro_data"]?["is_ad"] ?? false,
     background: Background.fromJson(json?["metro_data"]?["background"] ?? {}),
-    metroData: MetroData.fromJson(json?["metro_data"] ?? {})
+    metroData: MetroData.fromJson(json?["metro_data"] ?? {}),
+    itemList: json?["metro_data"]?["item_list"] == null ? null : List.from(json!["metro_data"]["item_list"].map((e) => MetroItem.fromJson(e))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -195,7 +198,44 @@ class ZCLMetro {
     "video": video?.toJson(),
     "is_ad": is_ad,
     "background": background?.toJson(),
-    "metroData": metroData?.toJson()
+    "metroData": metroData?.toJson(),
+    "item_list": itemList?.map((e) => e.toJson()),
+  };
+}
+
+class MetroItem {
+  MetroItem({
+    this.imageId,
+    this.title,
+    this.cover,
+    this.resourceType,
+    this.resourceId,
+    this.link,
+  });
+
+  String? imageId;
+  String? title;
+  Cover? cover;
+  String? resourceType;
+  String? resourceId;
+  String? link;
+
+  factory MetroItem.fromJson(Map<String, dynamic> json) => MetroItem(
+    imageId: json["image_id"] == null ? null : json["image_id"].toString(),
+    title: json["title"] == null ? null : json["title"],
+    cover: json["cover"] == null ? null : Cover.fromJson(json["cover"]),
+    resourceType: json["resource_type"] == null ? null : json["resource_type"],
+    resourceId: json["resource_id"] == null ? null : json["resource_id"].toString(),
+    link: json["link"] == null ? null : json["link"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "image_id": imageId == null ? null : imageId,
+    "title": title == null ? null : title,
+    "cover": cover == null ? null : cover?.toJson(),
+    "resource_type": resourceType == null ? null : resourceType,
+    "resource_id": resourceId == null ? null : resourceId,
+    "link": link == null ? null : link,
   };
 }
 
@@ -607,7 +647,9 @@ class MetroData {
     this.moreOption,
     this.cover,
     this.avatar,
-    this.imageCount
+    this.imageCount,
+    this.icons,
+    this.url
   });
 
   String? type;
@@ -638,6 +680,8 @@ class MetroData {
   Cover? cover;
   ZCLAvatar? avatar;
   int? imageCount;
+  List<ZCLIcon>? icons;
+  String? url;
 
   factory MetroData.fromJson(Map<String, dynamic> json) => MetroData(
     type: json["type"] == null ? null : json["type"],
@@ -667,7 +711,9 @@ class MetroData {
     moreOption: json["more_option"] == null ? null : List<ZCLMoreOption>.from(json["more_option"].map((x) => ZCLMoreOption.fromJson(x))),
     cover: json["cover"] == null ? null : Cover.fromJson(json["cover"]),
     avatar: json["avatar"] == null ? null : ZCLAvatar.fromJson(json["avatar"]),
-    imageCount: json["image_count"] == null ? null : json["image_count"]
+    imageCount: json["image_count"] == null ? null : json["image_count"],
+    icons: json["icons"] == null ? null : List<ZCLIcon>.from(json["icons"].map((x) => ZCLIcon.fromJson(x))),
+    url: json["url"] == null ? null : json["url"]
   );
 
   Map<String, dynamic> toJson() => {
@@ -698,7 +744,33 @@ class MetroData {
     "more_option": moreOption == null ? null : List<dynamic>.from(moreOption!.map((x) => x.toJson())),
     "cover": cover == null ? null : cover!.toJson(),
     "avatar": avatar == null ? null : avatar!.toJson(),
-    "image_count": imageCount == null ? null : imageCount
+    "image_count": imageCount == null ? null : imageCount,
+    "icons": icons == null ? null : List<ZCLIcon>.from(icons!.map((x) => x.toJson())),
+    "url": url == null ? null : url
+  };
+}
+
+class ZCLIcon {
+  ZCLIcon({
+    this.name,
+    this.icon,
+    this.link,
+  });
+
+  String? name;
+  String? icon;
+  String? link;
+
+  factory ZCLIcon.fromJson(Map<String, dynamic> json) => ZCLIcon(
+    name: json["name"] == null ? null : json["name"],
+    icon: json["icon"] == null ? null : json["icon"],
+    link: json["link"] == null ? null : json["link"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "name": name == null ? null : name,
+    "icon": icon == null ? null : icon,
+    "link": link == null ? null : link,
   };
 }
 

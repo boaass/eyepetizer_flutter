@@ -4,10 +4,12 @@ import 'package:eyepetizer/ui/pages/detail/video_detail.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/card_title.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/card_user.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/default_nav.dart';
+import 'package:eyepetizer/ui/widgets/metro_widgets/default_web.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/feed_cover_large_image.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/feed_cover_large_video.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/feed_cover_small_video.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/feed_item_detail.dart';
+import 'package:eyepetizer/ui/widgets/metro_widgets/icon_grid.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/more_link.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/normal_text.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/refresh_button.dart';
@@ -17,6 +19,7 @@ import 'package:eyepetizer/ui/widgets/metro_widgets/slide_cover_image_with_foote
 import 'package:eyepetizer/ui/widgets/metro_widgets/slide_cover_image_with_title.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/slide_cover_video.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/slide_user.dart';
+import 'package:eyepetizer/ui/widgets/metro_widgets/stacked_slide_cover_image.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/topic_intro.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/waterfall_cover_small_image.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/waterfall_cover_small_video.dart';
@@ -43,6 +46,9 @@ enum ZCLMetroType {
   waterfall_cover_small_video,
   more_link,
   slide_cover_image_with_title,
+  icon_grid,
+  stacked_slide_cover_image,
+  default_web
 }
 class ZCLMetroWidget extends StatefulWidget {
 
@@ -94,6 +100,12 @@ class ZCLMetroWidget extends StatefulWidget {
       _metroType = ZCLMetroType.more_link;
     } else if (model!.style!.tpl_label == "slide_cover_image_with_title") {
       _metroType = ZCLMetroType.slide_cover_image_with_title;
+    } else if (model!.style!.tpl_label == "icon_grid") {
+      _metroType = ZCLMetroType.icon_grid;
+    } else if (model!.style!.tpl_label == "stacked_slide_cover_image") {
+      _metroType = ZCLMetroType.stacked_slide_cover_image;
+    } else if (model!.style!.tpl_label == "default_web") {
+      _metroType = ZCLMetroType.default_web;
     } else {
       assert(true, "Unknow metro type");
     }
@@ -175,6 +187,15 @@ class _ZCLMetroWidgetState extends State<ZCLMetroWidget> {
         break;
       case ZCLMetroType.slide_cover_image_with_title:
         metroWidget = ZCLSlideCoverImageWithTitle(model: widget.model!);
+        break;
+      case ZCLMetroType.icon_grid:
+        metroWidget = ZCLIconGrid(model: widget.model!);
+        break;
+      case ZCLMetroType.stacked_slide_cover_image:
+        metroWidget = ZCLStackedSlideCoverImage(model: widget.model!);
+        break;
+      case ZCLMetroType.default_web:
+        metroWidget = ZCLDefaultWeb(model: widget.model!);
         break;
       case null:
         metroWidget = Container();

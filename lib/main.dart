@@ -14,6 +14,8 @@ import 'package:eyepetizer/ui/shared/app_theme.dart';
 import 'package:eyepetizer/ui/shared/size_fit.dart';
 import 'package:provider/provider.dart';
 
+import 'core/viewmodel/discovery_view_model.dart';
+
 main() {
   runApp(
     MultiProvider(
@@ -39,6 +41,7 @@ main() {
             create: (ctx) => ZCLUgcPicDetailViewModel(Provider.of<ZCLTopicDetailNotifier>(ctx, listen: false).link),
             update: (ctx, notifier, ugcPicDetailVM) => ZCLUgcPicDetailViewModel(Provider.of<ZCLTopicDetailNotifier>(ctx, listen: false).link)),
         ChangeNotifierProvider(create: (ctx) => ZCLCommunityViewModel()),
+        ChangeNotifierProvider(create: (ctx) => ZCLDiscoveryViewModel()),
       ],
       child: MyApp()
     )

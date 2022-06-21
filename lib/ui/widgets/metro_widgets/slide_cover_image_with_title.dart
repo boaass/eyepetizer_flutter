@@ -11,12 +11,15 @@ class ZCLSlideCoverImageWithTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: model.metroData!.cover!.imgInfo!.width!/ZCLSizeFit.dpr!,
+      width: ZCLSizeFit.screenWidth!/5*2,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(child: Image.network(model.cover!, fit: BoxFit.fill)),
-          Text(model.title!, style: Theme.of(context).textTheme.headline3)
+          Image.network(model.cover!, height: ZCLSizeFit.screenWidth!/5*2, fit: BoxFit.fill),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 20.px),
+            child: Text(model.title!, style: Theme.of(context).textTheme.headline4, textAlign: TextAlign.center,)
+          )
         ],
       ),
     );
