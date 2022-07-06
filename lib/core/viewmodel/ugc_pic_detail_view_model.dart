@@ -3,7 +3,16 @@ import 'dart:convert';
 import 'package:eyepetizer/core/model/ugc_pic_detail_model.dart';
 import 'package:eyepetizer/core/services/ugc_pic_detail_request.dart';
 import 'package:eyepetizer/core/viewmodel/base_view_model.dart';
+import 'package:flutter/cupertino.dart';
 
+class ZCLUgcPicDetailNotifier extends ChangeNotifier {
+  String _id = "";
+  String get id => _id;
+  set id(String id) {
+    _id = id;
+    notifyListeners();
+  }
+}
 
 class ZCLUgcPicDetailViewModel extends ZCLBaseViewModel {
   ZCLUgcPicDetailModel? _ugcPicDetailModel;
@@ -14,12 +23,11 @@ class ZCLUgcPicDetailViewModel extends ZCLBaseViewModel {
     notifyListeners();
   }
 
-  ZCLUgcPicDetailViewModel(String link) {
-    if (!link.contains("ugc/detail?")) {
-      return;
-    }
-    String str = link.split("ugc/detail?").last;
-    Map<String, dynamic> dataMap = new Map.fromIterable(str.split("&"), key: (item) => item.split("=").first, value: (item) => item.split("=").last);
+  ZCLUgcPicDetailViewModel(String id) {
+    Map<String, dynamic> dataMap = {
+      "resource_id": id,
+      "resource_type": "ugc_picture"
+    };
     ZCLUgcPicDetailRequest.getData(dataMap).then((value) {
       ugcPicDetailModel = value;
     }).catchError((error, stackTrace) {

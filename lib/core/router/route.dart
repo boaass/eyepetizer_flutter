@@ -1,9 +1,12 @@
 import 'package:eyepetizer/ui/pages/community/community.dart';
 import 'package:eyepetizer/ui/pages/daily/daily.dart';
+import 'package:eyepetizer/ui/pages/detail/search.dart';
 import 'package:eyepetizer/ui/pages/detail/topic_detail_light.dart';
 import 'package:eyepetizer/ui/pages/detail/topic_detail_tag.dart';
 import 'package:eyepetizer/ui/pages/detail/topic_detail.dart';
 import 'package:eyepetizer/ui/pages/detail/ugc_pic_detail.dart';
+import 'package:eyepetizer/ui/pages/detail/ugc_video_detail.dart';
+import 'package:eyepetizer/ui/pages/detail/user_center.dart';
 import 'package:eyepetizer/ui/pages/detail/video_detail.dart';
 import 'package:eyepetizer/ui/pages/discovery/discovery.dart';
 import 'package:eyepetizer/ui/pages/follow/follow.dart';
@@ -36,6 +39,9 @@ class ZCLRouter {
     ZCLTopicDetailTagPage.routeName: (ctx) => ZCLTopicDetailTagPage(),
     ZCLTopicDetailLightPage.routeName: (ctx) => ZCLTopicDetailLightPage(),
     ZCLUgcPicDetailPage.routeName: (ctx) => ZCLUgcPicDetailPage(),
+    ZCLUgcVideoDetailPage.routeName: (ctx) => ZCLUgcVideoDetailPage(),
+    ZCLSearchPage.routeName: (ctx) => ZCLSearchPage(),
+    ZCLUserCenterPage.routeName: (ctx) => ZCLUserCenterPage()
   };
 
   static final RouteFactory unknowRoute = (settings) {

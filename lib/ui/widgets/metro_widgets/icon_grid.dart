@@ -1,6 +1,9 @@
 import 'package:eyepetizer/core/model/card_model.dart';
+import 'package:eyepetizer/core/viewmodel/topic_detail_view_model.dart';
+import 'package:eyepetizer/ui/pages/detail/topic_detail_tag.dart';
 import 'package:flutter/material.dart';
 import 'package:eyepetizer/core/extention/num_extention.dart';
+import 'package:provider/provider.dart';
 
 
 class ZCLIconGrid extends StatelessWidget {
@@ -25,7 +28,13 @@ class ZCLIconGrid extends StatelessWidget {
         mainAxisSpacing: 10.px,
         crossAxisSpacing: 10.px,
         crossAxisCount: 3,
-        children: model.metroData!.icons!.map((e) => _buildItem(e)).toList()
+        children: model.metroData!.icons!.map((e) => GestureDetector(
+          onTap: () {
+            Provider.of<ZCLTopicDetailNotifier>(context, listen: false).link = Uri.decodeFull(e.link!);
+            Navigator.of(context).pushNamed(ZCLTopicDetailTagPage.routeName);
+          },
+          child: _buildItem(e))
+        ).toList()
       ),
     );
   }

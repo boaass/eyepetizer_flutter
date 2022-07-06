@@ -19,6 +19,24 @@ class ZCLDiscoveryViewModel extends ZCLBaseViewModel {
   }
   ZCLCardPageModel? get discoveryModel => _discoveryModel;
 
+  Future<ZCLCardPageModel?> update() async {
+    ZCLDiscoveryRequest.getDiscoveryNavData().then((value) {
+      discoveryNavModel = value;
+
+      String schemeUrl = discoveryNavModel!.navList!.first.url!;
+      String str = schemeUrl.split("?").last;
+      Map<String, dynamic> dataMap = new Map.fromIterable(str.split("&"), key: (item) => item.split("=").first, value: (item) => item.split("=").last);
+      ZCLDiscoveryRequest.getData(dataMap).then((value) {
+        return discoveryModel = value;
+      }).onError((error, stackTrace) {
+        print("$error \n $stackTrace");
+        return Future.error(error!);
+      });
+    }).onError((error, stackTrace) {
+      print("$error \n $stackTrace");
+    });
+  }
+
   ZCLDiscoveryViewModel() {
     ZCLDiscoveryRequest.getDiscoveryNavData().then((value) {
       discoveryNavModel = value;

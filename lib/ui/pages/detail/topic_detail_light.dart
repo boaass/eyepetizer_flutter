@@ -6,7 +6,7 @@ import 'package:eyepetizer/ui/shared/app_theme.dart';
 import 'package:eyepetizer/ui/shared/size_fit.dart';
 import 'package:eyepetizer/ui/widgets/detail_widgets/ugc_picture_bean_widget.dart';
 import 'package:eyepetizer/ui/widgets/detail_widgets/ugc_video_bean_widget.dart';
-import 'package:eyepetizer/ui/widgets/detail_widgets/video_bean_for_client_widget.dart';
+import 'package:eyepetizer/ui/widgets/detail_widgets/auto_play_video_bean_for_client.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:eyepetizer/core/extention/num_extention.dart';
@@ -116,7 +116,7 @@ class _ZCLTopicDetailLightPageState extends State<ZCLTopicDetailLightPage> {
           } else if (item.data!.content!.data!.dataType == ContentDataType.UGC_VIDEO_BEAN) {
             widget = ZCLUGCVideoBeanWidget(item: item);
           } else if (item.data!.content!.data!.dataType == ContentDataType.VIDEO_BEAN_FOR_CLIENT) {
-            widget = ZCLVideoBeanForClientWidget(item: item);
+            widget = ZCLAutoPlayVideoBeanForClientWidget(item: item);
           }
         }
       }

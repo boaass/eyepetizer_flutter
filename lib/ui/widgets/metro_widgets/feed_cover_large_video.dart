@@ -1,6 +1,12 @@
+import 'package:eyepetizer/core/viewmodel/topic_detail_view_model.dart';
+import 'package:eyepetizer/core/viewmodel/user_center_view_model.dart';
+import 'package:eyepetizer/core/viewmodel/video_detail_view_model.dart';
+import 'package:eyepetizer/ui/pages/detail/user_center.dart';
+import 'package:eyepetizer/ui/pages/detail/video_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:eyepetizer/core/model/card_model.dart';
 import 'package:eyepetizer/core/extention/num_extention.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 class ZCLFeedCoverLargeVideo extends StatefulWidget {
@@ -56,7 +62,13 @@ class _ZCLFeedCoverLargeVideoState extends State<ZCLFeedCoverLargeVideo> {
       key: widget.model!.stickyKey,
       child: Column(
         children: [
-          _buildFeedCoverLargeVideoBody(),
+          GestureDetector(
+            onTap: () {
+              Provider.of<ZCLVideoDetailNotifier>(context, listen: false).updateVideoId(widget.model!.video_id!);
+              Navigator.of(context).pushNamed(ZCLVideoDetailPage.routeName);
+            },
+            child: _buildFeedCoverLargeVideoBody(),
+          ),
           widget.model!.videoPlayerAspectRatio! == 0 ? _buildFeedCoverLargeVideoFooter(Colors.black, Colors.black54) : Container(),
           widget.model!.videoPlayerAspectRatio! != 0 ? Padding(
               padding: EdgeInsets.fromLTRB(0, 20.px, 0, 10.px),
@@ -131,25 +143,31 @@ class _ZCLFeedCoverLargeVideoState extends State<ZCLFeedCoverLargeVideo> {
   }
 
   _buildFeedCoverLargeVideoFooter(Color titleColor, Color subTitleColor) {
-    return Container(
-        padding: EdgeInsets.fromLTRB(10.px, 5.px, 10.px, 5.px),
-        child: ListTile(
-          contentPadding: EdgeInsets.zero,
-          leading: CircleAvatar(
-            foregroundImage: NetworkImage(widget.model!.author!.avatar!),
-          ),
-          title: Text(widget.model!.title!, style: Theme
-              .of(context)
-              .textTheme
-              .headline4!.copyWith(color: titleColor),),
-          subtitle: Text(
-              "${widget.model!.author!.nick} ${widget.model!.tags!.join(" ")}",
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .headline5!
-                  .copyWith(color: subTitleColor)),
-        )
+    return GestureDetector(
+      onTap: () {
+        Provider.of<ZCLUserCenterNotifier>(context, listen: false).link = widget.model!.author!.uid!.toString();
+        Navigator.of(context).pushNamed(ZCLUserCenterPage.routeName);
+      },
+      child: Container(
+          padding: EdgeInsets.fromLTRB(10.px, 5.px, 10.px, 5.px),
+          child: ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: CircleAvatar(
+              foregroundImage: NetworkImage(widget.model!.author!.avatar!),
+            ),
+            title: Text(widget.model!.title!, style: Theme
+                .of(context)
+                .textTheme
+                .headline4!.copyWith(color: titleColor),),
+            subtitle: Text(
+                "${widget.model!.author!.nick} ${widget.model!.tags!.join(" ")}",
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .headline5!
+                    .copyWith(color: subTitleColor)),
+          )
+      ),
     );
   }
 

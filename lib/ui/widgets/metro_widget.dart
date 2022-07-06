@@ -1,25 +1,33 @@
 import 'package:eyepetizer/core/model/card_model.dart';
 import 'package:eyepetizer/core/viewmodel/video_detail_view_model.dart';
 import 'package:eyepetizer/ui/pages/detail/video_detail.dart';
+import 'package:eyepetizer/ui/widgets/metro_widgets/card_small_title.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/card_title.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/card_user.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/default_nav.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/default_web.dart';
+import 'package:eyepetizer/ui/widgets/metro_widgets/description_text.dart';
+import 'package:eyepetizer/ui/widgets/metro_widgets/feed_cover_detail_topic.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/feed_cover_large_image.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/feed_cover_large_video.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/feed_cover_small_video.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/feed_item_detail.dart';
+import 'package:eyepetizer/ui/widgets/metro_widgets/feed_user.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/icon_grid.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/more_link.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/normal_text.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/refresh_button.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/rich_text_detail.dart';
+import 'package:eyepetizer/ui/widgets/metro_widgets/search_cover_small_video.dart';
+import 'package:eyepetizer/ui/widgets/metro_widgets/search_result_image.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/slide_cover_image.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/slide_cover_image_with_footer.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/slide_cover_image_with_title.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/slide_cover_video.dart';
+import 'package:eyepetizer/ui/widgets/metro_widgets/slide_cover_video_with_author.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/slide_user.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/stacked_slide_cover_image.dart';
+import 'package:eyepetizer/ui/widgets/metro_widgets/title_link.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/topic_intro.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/waterfall_cover_small_image.dart';
 import 'package:eyepetizer/ui/widgets/metro_widgets/waterfall_cover_small_video.dart';
@@ -48,7 +56,15 @@ enum ZCLMetroType {
   slide_cover_image_with_title,
   icon_grid,
   stacked_slide_cover_image,
-  default_web
+  default_web,
+  title_link,
+  search_cover_small_video,
+  feed_user,
+  feed_cover_detail_topic,
+  search_result_image,
+  card_small_title,
+  description_text,
+  slide_cover_video_with_author
 }
 class ZCLMetroWidget extends StatefulWidget {
 
@@ -106,6 +122,22 @@ class ZCLMetroWidget extends StatefulWidget {
       _metroType = ZCLMetroType.stacked_slide_cover_image;
     } else if (model!.style!.tpl_label == "default_web") {
       _metroType = ZCLMetroType.default_web;
+    } else if (model!.style!.tpl_label == "title_link") {
+      _metroType = ZCLMetroType.title_link;
+    } else if (model!.style!.tpl_label == "search_cover_small_video") {
+      _metroType = ZCLMetroType.search_cover_small_video;
+    } else if (model!.style!.tpl_label == "feed_user") {
+      _metroType = ZCLMetroType.feed_user;
+    } else if (model!.style!.tpl_label == "feed_cover_detail_topic") {
+      _metroType = ZCLMetroType.feed_cover_detail_topic;
+    } else if (model!.style!.tpl_label == "search_result_image") {
+      _metroType = ZCLMetroType.search_result_image;
+    } else if (model!.style!.tpl_label == "card_small_title") {
+      _metroType = ZCLMetroType.card_small_title;
+    } else if (model!.style!.tpl_label == "description_text") {
+      _metroType = ZCLMetroType.description_text;
+    } else if (model!.style!.tpl_label == "slide_cover_video_with_author") {
+      _metroType = ZCLMetroType.slide_cover_video_with_author;
     } else {
       assert(true, "Unknow metro type");
     }
@@ -197,12 +229,36 @@ class _ZCLMetroWidgetState extends State<ZCLMetroWidget> {
       case ZCLMetroType.default_web:
         metroWidget = ZCLDefaultWeb(model: widget.model!);
         break;
+      case ZCLMetroType.title_link:
+        metroWidget = ZCLTitleLink(model: widget.model!);
+        break;
+      case ZCLMetroType.search_cover_small_video:
+        metroWidget = ZCLSearchCoverSmallVideo(model: widget.model!);
+        break;
+      case ZCLMetroType.feed_user:
+        metroWidget = ZCLFeedUser(model: widget.model!);
+        break;
+      case ZCLMetroType.feed_cover_detail_topic:
+        metroWidget = ZCLFeedCoverDetailTopic(model: widget.model!);
+        break;
+      case ZCLMetroType.search_result_image:
+        metroWidget = ZCLSearchResultImage(model: widget.model!);
+        break;
+      case ZCLMetroType.card_small_title:
+        metroWidget = ZCLCardSmallTitle(model: widget.model!);
+        break;
+      case ZCLMetroType.description_text:
+        metroWidget = ZCLDescriptionText(model: widget.model!);
+        break;
+      case ZCLMetroType.slide_cover_video_with_author:
+        metroWidget = ZCLSlideCoverVideoWithAuthor(model: widget.model!);
+        break;
       case null:
         metroWidget = Container();
         break;
     }
 
-    return _buildGestureForWidget(metroWidget);
+    return metroWidget;
   }
 
   _buildGestureForWidget(Widget child) {
@@ -210,7 +266,6 @@ class _ZCLMetroWidgetState extends State<ZCLMetroWidget> {
       return GestureDetector(
         onTap: () {
           Provider.of<ZCLVideoDetailNotifier>(context, listen: false).updateVideoId(widget.model!.video_id!);
-          // Provider.of<ZCLRecommendViewModel>(context, listen: false).isBigVideoNeedShow = false;
           Navigator.of(context).pushNamed(ZCLVideoDetailPage.routeName);
         },
         child: child,

@@ -1,4 +1,5 @@
 import 'package:eyepetizer/core/viewmodel/topic_detail_view_model.dart';
+import 'package:eyepetizer/core/viewmodel/ugc_pic_detail_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/video_detail_view_model.dart';
 import 'package:eyepetizer/ui/pages/detail/ugc_pic_detail.dart';
 import 'package:eyepetizer/ui/pages/detail/video_detail.dart';
@@ -21,7 +22,7 @@ class ZCLFeedItemDetail extends StatelessWidget {
           Provider.of<ZCLVideoDetailNotifier>(context, listen: false).updateVideoId(model!.metroData!.video!.video_id!);
           Navigator.of(context).pushNamed(ZCLVideoDetailPage.routeName);
         } else {
-          Provider.of<ZCLTopicDetailNotifier>(context, listen: false).link = model!.link ?? "";
+          Provider.of<ZCLUgcPicDetailNotifier>(context, listen: false).id = model?.metroData?.resourceId ?? "";
           Navigator.of(context).pushNamed(ZCLUgcPicDetailPage.routeName);
         }
       },

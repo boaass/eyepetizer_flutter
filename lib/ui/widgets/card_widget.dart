@@ -1,9 +1,11 @@
 import 'package:eyepetizer/core/model/card_model.dart';
 import 'package:eyepetizer/core/viewmodel/topic_detail_view_model.dart';
+import 'package:eyepetizer/core/viewmodel/user_center_view_model.dart';
 import 'package:eyepetizer/ui/pages/detail/topic_detail_light.dart';
 import 'package:eyepetizer/ui/pages/detail/topic_detail_tag.dart';
 import 'package:eyepetizer/ui/pages/detail/topic_detail.dart';
-import 'package:eyepetizer/ui/shared/Utils.dart';
+import 'package:eyepetizer/ui/pages/detail/user_center.dart';
+import 'package:eyepetizer/ui/shared/utils.dart';
 import 'package:eyepetizer/ui/shared/size_fit.dart';
 import 'package:eyepetizer/ui/widgets/metro_widget.dart';
 import 'package:flutter/material.dart';
@@ -188,7 +190,7 @@ class _ZCLCardWidgetState extends State<ZCLCardWidget> {
     );
     List.from(widget.model!.header!.left!.map((e) => ZCLMetroWidget(model: e,)))
         ..addAll(List.from(widget.model!.header!.right!.map((e) => ZCLMetroWidget(model: e,))));
-    List<Widget> bodys = List.from(widget.model!.body!.metro_list!.map((v) => ZCLMetroWidget(model: v, onTap: widget.onTap, navIndex: widget.navIndex,)));
+    List<Widget> bodys = List.from(widget.model!.body!.metro_list!.map((v) => ZCLMetroWidget(model: v, onTap: widget.onTap, navIndex: widget.navIndex)));
     List<Widget> footers = List.from(widget.model!.footer!.left!.map((e) => ZCLMetroWidget(model: e,)))
       ..addAll(List.from(widget.model!.footer!.right!.map((e) => ZCLMetroWidget(model: e,))));
 
@@ -214,7 +216,7 @@ class _ZCLCardWidgetState extends State<ZCLCardWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ZCLMetroWidget(model: widget.model!.header!.left![0]),
+              widget.model!.header!.left!.length> 0 ? ZCLMetroWidget(model: widget.model!.header!.left![0]) : Container(),
               Row(
                 children: List<ZCLMetroWidget>.from((widget.model!.header!.right!.map((x) => ZCLMetroWidget(model: x,)))),
               )
@@ -222,15 +224,16 @@ class _ZCLCardWidgetState extends State<ZCLCardWidget> {
           ),
           Container(
             // margin: EdgeInsets.only(top: 20.px),
-            height: widget.model!.body!.metro_list!.first.metroData!.cover != null ?
-            widget.model!.body!.metro_list!.first.metroData!.cover!.imgInfo!.height!/ZCLSizeFit.dpr! :
-            widget.model!.body!.metro_list!.first.avatar!.imageInfo!.height!/ZCLSizeFit.dpr!,
+            // height: widget.model!.body!.metro_list!.first.metroData!.cover != null ?
+            // widget.model!.body!.metro_list!.first.metroData!.cover!.imgInfo!.height!/ZCLSizeFit.dpr! :
+            // widget.model!.body!.metro_list!.first.avatar!.imageInfo!.height!/ZCLSizeFit.dpr!,
+            height: 240.px,
             child: ListView.separated(
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               itemCount: widget.model!.body!.metro_list!.length,
               itemBuilder: (ctx, index) {
-                return ZCLMetroWidget(model: widget.model!.body!.metro_list![index]);
+                return addGesture(ZCLMetroWidget(model: widget.model!.body!.metro_list![index]), widget.model!.body!.metro_list![index].link!);
               },
               separatorBuilder: (BuildContext context, int index) {
                 return Container(
@@ -240,6 +243,10 @@ class _ZCLCardWidgetState extends State<ZCLCardWidget> {
             ),
           ),
           widget.model!.footer!.left!.length != 0 ? ListTile(
+            onTap: () {
+              Provider.of<ZCLUserCenterNotifier>(context, listen: false).link = widget.model!.footer!.left!.first.author!.uid!.toString();
+              Navigator.of(context).pushNamed(ZCLUserCenterPage.routeName);
+            },
             leading: CircleAvatar(foregroundImage: NetworkImage(widget.model!.footer!.left!.first.avatar!.url!),),
             title: Text(widget.model!.footer!.left!.first.nick!, style: Theme.of(context).textTheme.headline4!,),
             subtitle: Text(widget.model!.footer!.left!.first.description!, style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.black54),),
@@ -254,6 +261,16 @@ class _ZCLCardWidgetState extends State<ZCLCardWidget> {
           ) : Container()
         ],
       ),
+    );
+  }
+
+  addGesture(Widget widget, link) {
+    return GestureDetector(
+      child: widget,
+      onTap: () {
+        Provider.of<ZCLTopicDetailNotifier>(context, listen: false).link = link;
+        _jumpPageFromLink(link);
+      },
     );
   }
 

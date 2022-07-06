@@ -118,31 +118,38 @@ class _ZCLTopicDetailPageState extends State<ZCLTopicDetailPage> {
                     }, navIndex: _currentNavIndex,);
                   }
               ),
-              Opacity(
-                opacity: _opacity,
-                child: Container(
-                  color: Colors.white,
-                  padding: EdgeInsets.fromLTRB(10.px, 44, 10.px, 0),
-                  height: 100,
-                  width: ZCLSizeFit.screenWidth,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: (){
-                          if (_isOnlyNavShow) {
-                            _ChangePage(false);
-                          } else {
-                            Navigator.of(context).maybePop();
-                          }
-                        },
-                        child: Icon(Icons.arrow_back_ios_outlined)
-                      ),
-                      Expanded(child: Text(_isOnlyNavShow ? topicDetailVM.cardPageModel?.pageInfo?.title ?? "" : "", style: Theme.of(context).textTheme.headline3!.copyWith(fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis,)),
-                      Icon(Icons.share_outlined)
-                    ],
+              Stack(
+                children: [
+                  Opacity(
+                    opacity: _opacity,
+                    child: Container(
+                      color: Colors.white,
+                      height: 100,
+                      width: ZCLSizeFit.screenWidth
+                    ),
                   ),
-                ),
+                  Container(
+                    height: 100,
+                    padding: EdgeInsets.fromLTRB(10.px, 44, 10.px, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: (){
+                            if (_isOnlyNavShow) {
+                              _ChangePage(false);
+                            } else {
+                              Navigator.of(context).maybePop();
+                            }
+                          },
+                          child: Icon(Icons.arrow_back_ios_outlined, color: _opacity <= 0.2 ? Colors.white : Colors.black)
+                        ),
+                        Expanded(child: Text(_isOnlyNavShow ? topicDetailVM.cardPageModel?.pageInfo?.title ?? "" : "", style: Theme.of(context).textTheme.headline3!.copyWith(fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,)),
+                        Icon(Icons.share_outlined, color: _opacity <= 0.2 ? Colors.white : Colors.black)
+                      ],
+                    ),
+                  )
+                ],
               )
             ],
           ),

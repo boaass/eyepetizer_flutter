@@ -1,5 +1,8 @@
 import 'package:eyepetizer/core/model/ugc_pic_detail_model.dart';
+import 'package:eyepetizer/core/viewmodel/topic_detail_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/ugc_pic_detail_view_model.dart';
+import 'package:eyepetizer/core/viewmodel/user_center_view_model.dart';
+import 'package:eyepetizer/ui/pages/detail/user_center.dart';
 import 'package:eyepetizer/ui/widgets/expandable_pageview.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,43 +27,43 @@ class _ZCLUgcPicDetailPageState extends State<ZCLUgcPicDetailPage> {
       builder: (ctx, detailVM, child) {
         return detailVM.ugcPicDetailModel == null ? Scaffold(body: Container()) :
         SafeArea(
-          child: GestureDetector(
-            onTap: () {
-              setState(() {
-                _isPicDetailShow = !_isPicDetailShow;
-              });
-            },
-            child: Scaffold(
-              body: detailVM.ugcPicDetailModel == null ? Container() :
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  Container(
-                    color: Colors.black,
-                    child: AnimatedOpacity(
-                      duration: Duration(milliseconds: 300),
-                      opacity: _isPicDetailShow ? 1 : 0,
-                      child: Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.maybePop(context);
-                              },
-                              child: AppBar(
-                                leading: Icon(Icons.arrow_drop_down_circle_rounded, color: Colors.white,),
-                                title: Text(_currentPageIndex.toString() + "/" + detailVM.ugcPicDetailModel!.images!.length.toString(), style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white),),
-                                backgroundColor: Colors.black,
-                              ),
+          child: Scaffold(
+            body: detailVM.ugcPicDetailModel == null ? Container() :
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  color: Colors.black,
+                  child: AnimatedOpacity(
+                    duration: Duration(milliseconds: 300),
+                    opacity: _isPicDetailShow ? 1 : 0,
+                    child: Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.maybePop(context);
+                            },
+                            child: AppBar(
+                              leading: Icon(Icons.arrow_drop_down_circle_rounded, color: Colors.white,),
+                              title: Text(_currentPageIndex.toString() + "/" + detailVM.ugcPicDetailModel!.images!.length.toString(), style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white),),
+                              backgroundColor: Colors.black,
                             ),
-                            _buildAuthor(detailVM),
-                          ],
-                        ),
+                          ),
+                          _buildAuthor(detailVM),
+                        ],
                       ),
                     ),
                   ),
-                  ExpandablePageView(
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isPicDetailShow = !_isPicDetailShow;
+                    });
+                  },
+                  child: ExpandablePageView(
                     itemCount: detailVM.ugcPicDetailModel!.images!.length,
                     onPageChanged: (index) {
                       setState(() {
@@ -68,15 +71,15 @@ class _ZCLUgcPicDetailPageState extends State<ZCLUgcPicDetailPage> {
                       });
                     },
                     itemBuilder: (ctx, index) {
-                      return Container(
-                          height: 200.px,
-                          child: Image.network(detailVM.ugcPicDetailModel!.images![index].cover!.url!, fit: BoxFit.fitWidth)
+                      return AspectRatio(
+                        aspectRatio: 3/2,
+                        child: Image.network(detailVM.ugcPicDetailModel!.images![index].cover!.url!, fit: BoxFit.fitWidth)
                       );
                     }
                   ),
-                ]
-              )
-            ),
+                ),
+              ]
+            )
           ),
         );
       },
@@ -84,61 +87,78 @@ class _ZCLUgcPicDetailPageState extends State<ZCLUgcPicDetailPage> {
   }
 
   _buildAuthor(ZCLUgcPicDetailViewModel detailVM) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.px),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              CircleAvatar(foregroundImage: NetworkImage(detailVM.ugcPicDetailModel!.author!.avatar!.url!)),
-              SizedBox(width: 5.px,),
-              Text(detailVM.ugcPicDetailModel!.author!.nick!, style: Theme.of(context).textTheme.headline3!.copyWith(color: Colors.white)),
-              Spacer(),
-              Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.all(Radius.circular(5.px))
+    return GestureDetector(
+      onTap: () {
+        Provider.of<ZCLUserCenterNotifier>(context, listen: false).link = detailVM.ugcPicDetailModel!.author!.uid.toString();
+        Navigator.of(context).pushNamed(ZCLUserCenterPage.routeName);
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.px),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(foregroundImage: NetworkImage(detailVM.ugcPicDetailModel!.author!.avatar!.url!)),
+                SizedBox(width: 5.px,),
+                Text(detailVM.ugcPicDetailModel!.author!.nick!, style: Theme.of(context).textTheme.headline3!.copyWith(color: Colors.white)),
+                Spacer(),
+                Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.all(Radius.circular(5.px))
+                      ),
+                      padding: EdgeInsets.fromLTRB(7.px, 3.px, 7.px, 3.px),
+                      child: Text("私信", style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white)),
                     ),
-                    padding: EdgeInsets.fromLTRB(7.px, 3.px, 7.px, 3.px),
-                    child: Text("私信", style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white)),
-                  ),
-                  Container(width: 10.px,),
-                  Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white),
-                        borderRadius: BorderRadius.all(Radius.circular(5.px))
-                    ),
-                    padding: EdgeInsets.all(3.px),
-                    child: Text("+关注", style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white)),
-                  )
-                ],
-              )
-            ]
-          ),
-          (detailVM.ugcPicDetailModel!.text == null || detailVM.ugcPicDetailModel!.text!.isEmpty) ? Container() :
-          Padding(
-            padding: EdgeInsets.only(top: 10.px),
-            child: Text(detailVM.ugcPicDetailModel!.text!, style: Theme.of(context).textTheme.headline3!.copyWith(color: Colors.white)),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 10.px),
-            child: Wrap(
-              children: detailVM.ugcPicDetailModel!.topics!.map((e) => Container(
-                decoration: BoxDecoration(
-                    color: Colors.grey,
-                  borderRadius: BorderRadius.all(Radius.circular(3.px))
-                ),
-                padding: EdgeInsets.all(3.px),
-                child: Text(e.title!),
-              )).toList(),
+                    Container(width: 10.px,),
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white),
+                          borderRadius: BorderRadius.all(Radius.circular(5.px))
+                      ),
+                      padding: EdgeInsets.all(3.px),
+                      child: Text("+关注", style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white)),
+                    )
+                  ],
+                )
+              ]
             ),
-          ),
-          _buildDivider(),
-          _buildBottomButton(detailVM.ugcPicDetailModel!.consumption!),
-        ],
+            (detailVM.ugcPicDetailModel!.text == null || detailVM.ugcPicDetailModel!.text!.isEmpty) ? Container() :
+            Padding(
+              padding: EdgeInsets.only(top: 10.px),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      detailVM.ugcPicDetailModel!.text!,
+                      style: Theme.of(context).textTheme.headline3!.copyWith(color: Colors.white),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    )
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 10.px),
+              child: Wrap(
+                children: detailVM.ugcPicDetailModel!.topics!.map((e) => Container(
+                  decoration: BoxDecoration(
+                      color: Colors.grey,
+                    borderRadius: BorderRadius.all(Radius.circular(3.px))
+                  ),
+                  padding: EdgeInsets.all(3.px),
+                  child: Text(e.title!),
+                )).toList(),
+              ),
+            ),
+            _buildDivider(),
+            _buildBottomButton(detailVM.ugcPicDetailModel!.consumption!),
+          ],
+        ),
       ),
     );
   }

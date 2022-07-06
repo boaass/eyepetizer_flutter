@@ -145,7 +145,7 @@ class ZCLMetro {
   factory ZCLMetro.fromJson(Map<String, dynamic>? json) => ZCLMetro(
     metro_id: json?["metro_id"].toString() ?? "",
     type: json?["type"] ?? "",
-    video_id: json?["metro_data"]?["video_id"] == null ? null : json?["metro_data"]["video_id"],
+    video_id: json?["metro_data"]?["video_id"] == null ? null : json?["metro_data"]["video_id"].toString(),
     title: json?["metro_data"]?["title"] ?? "",
     duration: ZCLDuration.fromJson(json?["metro_data"]?["duration"]),
     autoplay: json?["metro_data"]?["play_ctrl"]?["autoplay"] ?? false,
@@ -325,6 +325,9 @@ class Params {
     this.pageLabel,
     this.pageParams,
     this.cardList,
+    this.query,
+    this.type,
+    this.num,
   });
 
   String? card;
@@ -337,6 +340,9 @@ class Params {
   String? pageLabel;
   String? pageParams;
   String? cardList;
+  String? query;
+  String? type;
+  String? num;
 
   factory Params.fromJson(Map<String, dynamic> json) => Params(
     card: json["card"] == null ? null : json["card"],
@@ -349,6 +355,9 @@ class Params {
     pageLabel: json["page_label"] == null ? null : json["page_label"],
     pageParams: json["page_params"] == null ? null : json["page_params"],
     cardList: json["card_list"] == null ? null : json["card_list"],
+    query: json["query"] == null ? null : json["query"],
+    type: json["type"] == null ? null : json["type"],
+    num: json["num"] == null ? null : json["num"].toString(),
   );
 
   Map<String, dynamic> toJson() => {
@@ -362,6 +371,9 @@ class Params {
     "page_label": pageLabel == null ? null : pageLabel,
     "page_params": pageParams == null ? null : pageParams,
     "card_list": cardList == null ? null : cardList,
+    "query": query == null ? null : query,
+    "type": type == null ? null : type,
+    "num": num == null ? null : num,
   };
 }
 
@@ -649,7 +661,11 @@ class MetroData {
     this.avatar,
     this.imageCount,
     this.icons,
-    this.url
+    this.url,
+    this.title,
+    this.description,
+    this.tags,
+    this.uid
   });
 
   String? type;
@@ -682,6 +698,10 @@ class MetroData {
   int? imageCount;
   List<ZCLIcon>? icons;
   String? url;
+  String? title;
+  String? description;
+  List<Tag>? tags;
+  String? uid;
 
   factory MetroData.fromJson(Map<String, dynamic> json) => MetroData(
     type: json["type"] == null ? null : json["type"],
@@ -713,7 +733,11 @@ class MetroData {
     avatar: json["avatar"] == null ? null : ZCLAvatar.fromJson(json["avatar"]),
     imageCount: json["image_count"] == null ? null : json["image_count"],
     icons: json["icons"] == null ? null : List<ZCLIcon>.from(json["icons"].map((x) => ZCLIcon.fromJson(x))),
-    url: json["url"] == null ? null : json["url"]
+    url: json["url"] == null ? null : json["url"],
+    title: json["title"] == null ? null : json["title"],
+    description: json["description"] == null ? null : json["description"],
+    tags: json["tags"] == null ? null : List.from(json["tags"].map((e) => Tag.fromJson(e))),
+    uid: json["uid"] == null ? null : json["uid"].toString()
   );
 
   Map<String, dynamic> toJson() => {
@@ -746,7 +770,35 @@ class MetroData {
     "avatar": avatar == null ? null : avatar!.toJson(),
     "image_count": imageCount == null ? null : imageCount,
     "icons": icons == null ? null : List<ZCLIcon>.from(icons!.map((x) => x.toJson())),
-    "url": url == null ? null : url
+    "url": url == null ? null : url,
+    "title": title == null ? null : title,
+    "description": description == null ? null : description,
+    "tags": tags == null ? null : tags!.map((e) => e.toJson()),
+    "uid": uid == null ? null : uid,
+  };
+}
+
+class Tag {
+  Tag({
+    this.id,
+    this.title,
+    this.link,
+  });
+
+  int? id;
+  String? title;
+  String? link;
+
+  factory Tag.fromJson(Map<String, dynamic> json) => Tag(
+    id: json["id"] == null ? null : json["id"],
+    title: json["title"] == null ? null : json["title"],
+    link: json["link"] == null ? null : json["link"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id == null ? null : id,
+    "title": title == null ? null : title,
+    "link": link == null ? null : link,
   };
 }
 

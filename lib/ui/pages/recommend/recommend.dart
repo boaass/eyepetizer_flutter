@@ -3,7 +3,6 @@ import 'package:eyepetizer/ui/widgets/card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
-import 'package:eyepetizer/core/extention/num_extention.dart';
 
 
 class ZCLRecommendPage extends StatefulWidget {

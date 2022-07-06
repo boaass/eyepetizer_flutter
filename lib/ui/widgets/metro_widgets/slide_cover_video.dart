@@ -51,15 +51,16 @@ class _ZCLSlideCoverVideoState extends State<ZCLSlideCoverVideo> {
     _initializeVideoPlayController();
     return Container(
         padding: EdgeInsets.only(top: 10.px),
+        width: 300.px,
         child: Stack(
             alignment: Alignment.center,
             children: [
-              _videoController!.value.isInitialized ?
+              _videoController != null ?
               AspectRatio(
                   aspectRatio: _videoController!.value.aspectRatio,
                   child: VideoPlayer(_videoController!,))
-                  : Image.network(widget.model!.cover!),
-              Icon(Icons.play_arrow, color: Colors.white,)
+                  : Image.network(widget.model!.cover!, fit: BoxFit.fill),
+              Icon(Icons.play_arrow, color: Colors.white, size: 40.px)
             ]
         )
     );

@@ -74,7 +74,7 @@ class ZCLTopicDetailTagViewModel extends ZCLBaseViewModel {
       return;
     }
 
-    String id = link.split("eyepetizer://tag/").last.split("?").first;
+    String id = link.split("eyepetizer://tag/").last.split("?").first.split("/").first;
     initTabIndex = int.tryParse(link.split("tabIndex=").last) ?? 0;
 
     ZCLTabInfoRequest.getData(id).then((value) {

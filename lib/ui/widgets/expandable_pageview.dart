@@ -34,7 +34,7 @@ class _ExpandablePageViewState extends State<ExpandablePageView> {
     super.initState();
     _heights = List.filled(widget.itemCount!, 0, growable: true);
     _pageController = widget.controller ?? PageController();
-    _pageController!.addListener(_updatePage);
+    _pageController?.addListener(_updatePage);
   }
 
   @override

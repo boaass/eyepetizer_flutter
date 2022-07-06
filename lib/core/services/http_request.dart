@@ -23,11 +23,11 @@ class HttpRequest {
     // 创建默认的全局拦截器
     Interceptor dInter = InterceptorsWrapper(
       onRequest: (option){
-        print("请求拦截");
+        // print("请求拦截");
         return option;
       },
       onResponse: (option) {
-        print("响应拦截");
+        // print("响应拦截");
         return option;
       },
       onError: (err) {

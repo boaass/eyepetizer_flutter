@@ -1,5 +1,6 @@
 import 'package:eyepetizer/core/model/card_model.dart';
 import 'package:eyepetizer/core/viewmodel/topic_detail_view_model.dart';
+import 'package:eyepetizer/core/viewmodel/ugc_pic_detail_view_model.dart';
 import 'package:eyepetizer/ui/pages/detail/ugc_pic_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:eyepetizer/core/extention/num_extention.dart';
@@ -18,7 +19,7 @@ class _ZCLWaterfallCoverSmallImageState extends State<ZCLWaterfallCoverSmallImag
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Provider.of<ZCLTopicDetailNotifier>(context, listen: false).link = widget.model.link ?? "";
+        Provider.of<ZCLUgcPicDetailNotifier>(context, listen: false).id = widget.model.metroData?.resourceId ?? "";
         Navigator.of(context).pushNamed(ZCLUgcPicDetailPage.routeName);
       },
       child: Container(

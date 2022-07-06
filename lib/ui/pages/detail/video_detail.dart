@@ -2,7 +2,10 @@ import 'package:eyepetizer/core/model/topic_detail_tag_model.dart';
 import 'package:eyepetizer/core/model/video_bean_model.dart';
 import 'package:eyepetizer/core/model/video_related_model.dart';
 import 'package:eyepetizer/core/model/video_replies_model.dart';
+import 'package:eyepetizer/core/viewmodel/topic_detail_view_model.dart';
+import 'package:eyepetizer/core/viewmodel/user_center_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/video_detail_view_model.dart';
+import 'package:eyepetizer/ui/pages/detail/user_center.dart';
 import 'package:eyepetizer/ui/widgets/kaiyan_chewiedvideo_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -185,20 +188,26 @@ class _ZCLVideoDetailPageState extends State<ZCLVideoDetailPage> {
   }
 
   _buildAuthorItem(ZCLVideoDetailViewModel videoDetailVM) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.white10))
-      ),
-      child: ListTile(
-        leading: CircleAvatar(foregroundImage: NetworkImage(videoDetailVM.videoBeanModel?.author?.icon ?? videoDetailVM.videoBeanModel?.provider?.icon ?? ""),),
-        title: Text(videoDetailVM.videoBeanModel?.author?.name ?? videoDetailVM.videoBeanModel?.provider?.name ?? "", style: Theme.of(context).textTheme.headline3!.copyWith(color: Colors.white),),
-        subtitle: Text(
-          videoDetailVM.videoBeanModel?.author?.description ?? videoDetailVM.videoBeanModel?.provider?.alias ?? "",
-          style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white54),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+    return GestureDetector(
+      onTap: () {
+        Provider.of<ZCLUserCenterNotifier>(context, listen: false).link = videoDetailVM.videoBeanModel?.author?.id?.toString() ?? "";
+        Navigator.of(context).pushNamed(ZCLUserCenterPage.routeName);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: Colors.white10))
         ),
-        trailing: _buildAuthorFollowButton(videoDetailVM),
+        child: ListTile(
+          leading: CircleAvatar(foregroundImage: NetworkImage(videoDetailVM.videoBeanModel?.author?.icon ?? videoDetailVM.videoBeanModel?.provider?.icon ?? ""),),
+          title: Text(videoDetailVM.videoBeanModel?.author?.name ?? videoDetailVM.videoBeanModel?.provider?.name ?? "", style: Theme.of(context).textTheme.headline3!.copyWith(color: Colors.white),),
+          subtitle: Text(
+            videoDetailVM.videoBeanModel?.author?.description ?? videoDetailVM.videoBeanModel?.provider?.alias ?? "",
+            style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white54),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          trailing: _buildAuthorFollowButton(videoDetailVM),
+        ),
       ),
     );
   }
@@ -324,7 +333,7 @@ class _ZCLVideoDetailPageState extends State<ZCLVideoDetailPage> {
                     children: [
                       Row(
                         children: [
-                          Text(item.data!.user!.nickname!, style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis,),
+                          Expanded(child: Text(item.data!.user!.nickname!, style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis,)),
                           Spacer(),
                           Text(item.data!.likeCount.toString(), style: Theme.of(context).textTheme.headline3!.copyWith(color: Colors.white),),
                           Padding(
@@ -343,6 +352,10 @@ class _ZCLVideoDetailPageState extends State<ZCLVideoDetailPage> {
                         margin: EdgeInsets.only(top: 5.px),
                         color: Color.fromRGBO(0, 0, 0, .1),
                         child: ListTile(
+                          onTap: () {
+                            Provider.of<ZCLUserCenterNotifier>(context, listen: false).link = item.data!.parentReply!.user!.uid!.toString();
+                            Navigator.of(context).pushNamed(ZCLUserCenterPage.routeName);
+                          },
                           leading: CircleAvatar(foregroundImage: NetworkImage(item.data!.parentReply!.user!.avatar!),),
                           title: Text(item.data!.parentReply!.user!.nickname!, style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis),
                           subtitle: Text(item.data!.parentReply!.message!, style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white), maxLines: 2, overflow: TextOverflow.ellipsis,),

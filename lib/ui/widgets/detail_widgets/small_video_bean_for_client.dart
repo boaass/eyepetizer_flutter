@@ -1,38 +1,46 @@
+import 'package:eyepetizer/core/model/topic_detail_tag_model.dart';
 import 'package:eyepetizer/core/viewmodel/video_detail_view_model.dart';
 import 'package:eyepetizer/ui/pages/detail/video_detail.dart';
+import 'package:eyepetizer/ui/shared/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:eyepetizer/core/model/card_model.dart';
 import 'package:eyepetizer/core/extention/num_extention.dart';
 import 'package:provider/provider.dart';
 
 
-class ZCLFeedCoverSmallVideo extends StatelessWidget {
-  const ZCLFeedCoverSmallVideo({Key? key, required this.model}) : super(key: key);
-  final ZCLMetro? model;
+class ZCLSmallVideoBeanForClient extends StatelessWidget {
+  const ZCLSmallVideoBeanForClient({Key? key, required this.item}) : super(key: key);
+  final ItemList item;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Provider.of<ZCLVideoDetailNotifier>(context, listen: false).updateVideoId(model!.video_id!);
+        Provider.of<ZCLVideoDetailNotifier>(context, listen: false).updateVideoId(item.data!.id!.toString());
         Navigator.of(context).pushNamed(ZCLVideoDetailPage.routeName);
       },
       child: Container(
-        margin: EdgeInsets.all(10.px),
+        margin: EdgeInsets.fromLTRB(20.px, 10.px, 20.px, 10.px),
         height: 120.px,
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.black54)
-        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
               flex: 1,
               child: Stack(
-                alignment: Alignment.center,
+                fit: StackFit.expand,
                 children: [
-                  Image.network(model!.cover!, fit: BoxFit.fill,),
-                  Icon(Icons.play_arrow, color: Colors.white, size: 60.px,),
+                  Image.network(item.data!.cover!.feed!, fit: BoxFit.fill),
+                  Positioned(
+                    right: 5.px,
+                    bottom: 5.px,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white),
+                        borderRadius: BorderRadius.all(Radius.circular(5.px))
+                      ),
+                      child: Text(ZCLUtils.secondToTimeText(item.data!.duration!), style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.white)),
+                    ),
+                  )
                 ],
               ),
             ),
@@ -45,8 +53,8 @@ class ZCLFeedCoverSmallVideo extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                        model!.title!,
-                        style: Theme.of(context).textTheme.headline4!.copyWith(fontWeight: FontWeight.bold),
+                        item.data!.title!,
+                        style: Theme.of(context).textTheme.headline5!.copyWith(fontWeight: FontWeight.bold),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis
                     ),
@@ -54,17 +62,10 @@ class ZCLFeedCoverSmallVideo extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                            "${model!.tags!.join(" ")}",
+                            "# ${item.data!.category}",
                             style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.black54)
                         ),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 4.px),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black54, ),
-                            borderRadius: BorderRadius.circular(15.px),
-                          ),
-                          child: Text(model!.duration!.text!, style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.black54),),
-                        )
+                        Icon(Icons.upload_sharp, color: Colors.grey)
                       ],
                     )
                   ],

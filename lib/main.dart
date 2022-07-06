@@ -2,10 +2,13 @@ import 'package:eyepetizer/core/viewmodel/community_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/daily_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/follow_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/recommend_view_model.dart';
+import 'package:eyepetizer/core/viewmodel/search_recommend_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/topic_detail_light_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/topic_detail_tag_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/topic_detail_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/ugc_pic_detail_view_model.dart';
+import 'package:eyepetizer/core/viewmodel/ugc_video_detail_view_model.dart';
+import 'package:eyepetizer/core/viewmodel/user_center_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/video_detail_view_model.dart';
 import 'package:flutter/material.dart';
 
@@ -37,11 +40,21 @@ main() {
         ChangeNotifierProxyProvider<ZCLTopicDetailNotifier, ZCLTopicDetailLightViewModel>(
             create: (ctx) => ZCLTopicDetailLightViewModel(Provider.of<ZCLTopicDetailNotifier>(ctx, listen: false).link),
             update: (ctx, notifier, topicDetailLightVM) => ZCLTopicDetailLightViewModel(Provider.of<ZCLTopicDetailNotifier>(ctx, listen: false).link)),
-        ChangeNotifierProxyProvider<ZCLTopicDetailNotifier, ZCLUgcPicDetailViewModel>(
-            create: (ctx) => ZCLUgcPicDetailViewModel(Provider.of<ZCLTopicDetailNotifier>(ctx, listen: false).link),
-            update: (ctx, notifier, ugcPicDetailVM) => ZCLUgcPicDetailViewModel(Provider.of<ZCLTopicDetailNotifier>(ctx, listen: false).link)),
+        ChangeNotifierProvider(create: (ctx) => ZCLUgcPicDetailNotifier()),
+        ChangeNotifierProxyProvider<ZCLUgcPicDetailNotifier, ZCLUgcPicDetailViewModel>(
+            create: (ctx) => ZCLUgcPicDetailViewModel(Provider.of<ZCLUgcPicDetailNotifier>(ctx, listen: false).id),
+            update: (ctx, notifier, ugcPicDetailVM) => ZCLUgcPicDetailViewModel(Provider.of<ZCLUgcPicDetailNotifier>(ctx, listen: false).id)),
+        ChangeNotifierProvider(create: (ctx) => ZCLUgcVideoDetailNotifier()),
+        ChangeNotifierProxyProvider<ZCLUgcVideoDetailNotifier, ZCLUgcVideoDetailViewModel>(
+            create: (ctx) => ZCLUgcVideoDetailViewModel(Provider.of<ZCLUgcVideoDetailNotifier>(ctx, listen: false).id),
+            update: (ctx, notifier, ugcVideoDetailVM) => ZCLUgcVideoDetailViewModel(Provider.of<ZCLUgcVideoDetailNotifier>(ctx, listen: false).id)),
         ChangeNotifierProvider(create: (ctx) => ZCLCommunityViewModel()),
         ChangeNotifierProvider(create: (ctx) => ZCLDiscoveryViewModel()),
+        ChangeNotifierProvider(create: (ctx) => ZCLSearchRecommendViewModel()),
+        ChangeNotifierProvider(create: (ctx) => ZCLUserCenterNotifier()),
+        ChangeNotifierProxyProvider<ZCLUserCenterNotifier, ZCLUserCenterViewModel>(
+            create: (ctx) => ZCLUserCenterViewModel(Provider.of<ZCLUserCenterNotifier>(ctx, listen: false).link),
+            update: (ctx, notifier, ugcPicDetailVM) => ZCLUserCenterViewModel(Provider.of<ZCLUserCenterNotifier>(ctx, listen: false).link)),
       ],
       child: MyApp()
     )

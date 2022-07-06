@@ -1,8 +1,16 @@
 import 'package:date_format/date_format.dart';
 import 'package:eyepetizer/core/model/topic_detail_tag_model.dart';
+import 'package:eyepetizer/core/viewmodel/topic_detail_view_model.dart';
+import 'package:eyepetizer/core/viewmodel/ugc_video_detail_view_model.dart';
+import 'package:eyepetizer/core/viewmodel/user_center_view_model.dart';
+import 'package:eyepetizer/core/viewmodel/video_detail_view_model.dart';
+import 'package:eyepetizer/ui/pages/detail/ugc_video_detail.dart';
+import 'package:eyepetizer/ui/pages/detail/user_center.dart';
+import 'package:eyepetizer/ui/pages/detail/video_detail.dart';
 import 'package:eyepetizer/ui/widgets/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:eyepetizer/core/extention/num_extention.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 
@@ -67,30 +75,35 @@ class _ZCLUGCVideoBeanWidgetState extends State<ZCLUGCVideoBeanWidget> {
         children: [
           Container(
             child: ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: CircleAvatar(foregroundImage: NetworkImage(widget.item
-                    .data!.content!.data!.owner!.avatar!)),
-                title: Text(widget.item.data!.content!.data!.owner!.nickname!,
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .headline3!
-                        .copyWith(fontWeight: FontWeight.bold)),
-                subtitle: Text("${_formatTimestamp(widget.item.data!.content!.data!.createTime!)} 发布:"),
-                trailing: widget.item.data!.header!.topShow! ? Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.blue),
-                      borderRadius: BorderRadius.circular(5)
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    child: Text("置顶", style: Theme
-                        .of(context)
-                        .textTheme
-                        .headline4!
-                        .copyWith(color: Colors.blue),),
-                  ),
-                ) : Container(width: 1,)
+              onTap: () {
+                Provider.of<ZCLUserCenterNotifier>(context, listen: false).link = widget.item
+                    .data!.content!.data!.owner!.uid.toString();
+                Navigator.of(context).pushNamed(ZCLUserCenterPage.routeName);
+              },
+              contentPadding: EdgeInsets.zero,
+              leading: CircleAvatar(foregroundImage: NetworkImage(widget.item
+                  .data!.content!.data!.owner!.avatar!)),
+              title: Text(widget.item.data!.content!.data!.owner!.nickname!,
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .headline3!
+                      .copyWith(fontWeight: FontWeight.bold)),
+              subtitle: Text("${_formatTimestamp(widget.item.data!.content!.data!.createTime!)} 发布:"),
+              trailing: widget.item.data!.header!.topShow! ? Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.blue),
+                    borderRadius: BorderRadius.circular(5)
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: Text("置顶", style: Theme
+                      .of(context)
+                      .textTheme
+                      .headline4!
+                      .copyWith(color: Colors.blue),),
+                ),
+              ) : Container(width: 1,)
             ),
           ),
           widget.item.data!.content!.data!.description == "" ? Container() :
@@ -125,31 +138,37 @@ class _ZCLUGCVideoBeanWidgetState extends State<ZCLUGCVideoBeanWidget> {
   }
 
   _buildVideo(ContentData data) {
-    return Container(
-      clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5.px)
-      ),
-      margin: EdgeInsets.only(top: 10.px),
-      child: Stack(
-        children: [
-          AspectRatio(
-            aspectRatio: 5/3, //_videoPlayerController!.value.aspectRatio,
-            child: VideoPlayer(_videoPlayerController!),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: SizedBox(
-              height: 3.px,
-              child: LinearProgressIndicator(
-                backgroundColor: Colors.transparent,
-                valueColor: AlwaysStoppedAnimation(Colors.blue),
-                value: _playProgress,
-              ),
-            ))
-        ],
+    return GestureDetector(
+      onTap: () {
+        Provider.of<ZCLUgcVideoDetailNotifier>(context, listen: false).id = data.id.toString();
+        Navigator.of(context).pushNamed(ZCLUgcVideoDetailPage.routeName);
+      },
+      child: Container(
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5.px)
+        ),
+        margin: EdgeInsets.only(top: 10.px),
+        child: Stack(
+          children: [
+            AspectRatio(
+              aspectRatio: 5/3, //_videoPlayerController!.value.aspectRatio,
+              child: VideoPlayer(_videoPlayerController!),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: SizedBox(
+                height: 3.px,
+                child: LinearProgressIndicator(
+                  backgroundColor: Colors.transparent,
+                  valueColor: AlwaysStoppedAnimation(Colors.blue),
+                  value: _playProgress,
+                ),
+              ))
+          ],
+        ),
       ),
     );
   }

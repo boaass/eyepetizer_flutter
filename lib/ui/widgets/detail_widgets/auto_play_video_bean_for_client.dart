@@ -1,5 +1,8 @@
 import 'package:date_format/date_format.dart';
+import 'package:eyepetizer/core/viewmodel/topic_detail_view_model.dart';
+import 'package:eyepetizer/core/viewmodel/user_center_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/video_detail_view_model.dart';
+import 'package:eyepetizer/ui/pages/detail/user_center.dart';
 import 'package:eyepetizer/ui/pages/detail/video_detail.dart';
 import 'package:eyepetizer/ui/widgets/expandable_text.dart';
 import 'package:flutter/material.dart';
@@ -9,16 +12,16 @@ import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 
-class ZCLVideoBeanForClientWidget extends StatefulWidget {
+class ZCLAutoPlayVideoBeanForClientWidget extends StatefulWidget {
   final ItemList item;
 
-  const ZCLVideoBeanForClientWidget({Key? key, required this.item}) : super(key: key);
+  const ZCLAutoPlayVideoBeanForClientWidget({Key? key, required this.item}) : super(key: key);
 
   @override
-  _ZCLVideoBeanForClientWidgetState createState() => _ZCLVideoBeanForClientWidgetState();
+  _ZCLAutoPlayVideoBeanForClientWidgetState createState() => _ZCLAutoPlayVideoBeanForClientWidgetState();
 }
 
-class _ZCLVideoBeanForClientWidgetState extends State<ZCLVideoBeanForClientWidget> {
+class _ZCLAutoPlayVideoBeanForClientWidgetState extends State<ZCLAutoPlayVideoBeanForClientWidget> {
 
   VideoPlayerController? _videoPlayerController;
 
@@ -72,6 +75,10 @@ class _ZCLVideoBeanForClientWidgetState extends State<ZCLVideoBeanForClientWidge
 
   _buildAuthHeader() {
     return ListTile(
+      onTap: () {
+        Provider.of<ZCLUserCenterNotifier>(context, listen: false).link = widget.item.data!.content!.data!.author!.id.toString();
+        Navigator.of(context).pushNamed(ZCLUserCenterPage.routeName);
+      },
       contentPadding: EdgeInsets.zero,
       leading: CircleAvatar(foregroundImage: NetworkImage(widget.item.data!.content!.data!.author!.icon!)),
       title: Text(widget.item.data!.content!.data!.author!.name!, style: Theme.of(context).textTheme.headline4),

@@ -82,18 +82,22 @@ class ItemList {
   };
 }
 
-enum ItemListType { PICTURE_FOLLOW_CARD, AUTO_PLAY_FOLLOW_CARD, VIDEO_SMALL_CARD}
+enum ItemListType { PICTURE_FOLLOW_CARD, AUTO_PLAY_FOLLOW_CARD, VIDEO_SMALL_CARD, TEXT_CARD, FOLLOW_CARD}
 
 final itemListTypeEnumValues = EnumValues({
   "pictureFollowCard": ItemListType.PICTURE_FOLLOW_CARD,
   "autoPlayFollowCard": ItemListType.AUTO_PLAY_FOLLOW_CARD,
-  "videoSmallCard": ItemListType.VIDEO_SMALL_CARD
+  "videoSmallCard": ItemListType.VIDEO_SMALL_CARD,
+  "textCard": ItemListType.TEXT_CARD,
+  "followCard": ItemListType.FOLLOW_CARD,
 });
 
-enum ItemListDataType { FOLLOW_CARD}
+enum ItemListDataType { FOLLOW_CARD, TEXT_CARD, VIDEO_BEAN_FOR_CLIENT}
 
 final itemListDataTypeEnumValues = EnumValues({
-  "FollowCard": ItemListDataType.FOLLOW_CARD
+  "FollowCard": ItemListDataType.FOLLOW_CARD,
+  "TextCard": ItemListDataType.TEXT_CARD,
+  "VideoBeanForClient": ItemListDataType.VIDEO_BEAN_FOR_CLIENT
 });
 
 class ItemListData {
@@ -102,18 +106,207 @@ class ItemListData {
     this.header,
     this.content,
     this.adTrack,
+    this.id,
+    this.type,
+    this.text,
+    this.subTitle,
+    this.actionUrl,
+
+    this.title,
+    this.description,
+    this.metroItemLibrary,
+    this.tags,
+    this.consumption,
+    this.resourceType,
+    this.slogan,
+    this.provider,
+    this.category,
+    this.author,
+    this.cover,
+    this.playUrl,
+    this.thumbPlayUrl,
+    this.duration,
+    this.webUrl,
+    this.releaseTime,
+    this.playInfo,
+    this.campaign,
+    this.waterMarks,
+    this.ad,
+    this.titlePgc,
+    this.descriptionPgc,
+    this.remark,
+    this.ifLimitVideo,
+    this.searchWeight,
+    this.brandWebsiteInfo,
+    this.videoPosterBean,
+    this.idx,
+    this.shareAdTrack,
+    this.favoriteAdTrack,
+    this.webAdTrack,
+    this.date,
+    this.promotion,
+    this.label,
+    this.labelList,
+    this.descriptionEditor,
+    this.collected,
+    this.reallyCollected,
+    this.played,
+    this.subtitles,
+    this.lastViewTime,
+    this.playlists,
+    this.src,
+    this.recallSource,
+    this.metroItemRecallSource,
+    this.candidateId,
+    this.sourceUrl,
+    this.tailTimePoint,
+    this.createTime,
+    this.updateTime,
+    this.infoStatus,
+    this.status,
+    this.showLabel,
+    this.premiereDate,
+    this.areaSet,
+    this.subtitleStatus,
+    this.translateStatus,
   });
 
   ItemListDataType? dataType;
   Header? header;
   Content? content;
   List<dynamic>? adTrack;
+  String? id;
+  String? type;
+  String? text;
+  String? subTitle;
+  String? actionUrl;
+
+  String? title;
+  String? description;
+  String? metroItemLibrary;
+  List<Tag>? tags;
+  Consumption? consumption;
+  String? resourceType;
+  dynamic? slogan;
+  ZCLProvider? provider;
+  String? category;
+  Author? author;
+  Cover? cover;
+  String? playUrl;
+  dynamic? thumbPlayUrl;
+  int? duration;
+  WebUrl? webUrl;
+  int? releaseTime;
+  List<PlayInfo>? playInfo;
+  dynamic? campaign;
+  dynamic? waterMarks;
+  bool? ad;
+  String? titlePgc;
+  String? descriptionPgc;
+  dynamic? remark;
+  bool? ifLimitVideo;
+  int? searchWeight;
+  dynamic? brandWebsiteInfo;
+  dynamic? videoPosterBean;
+  int? idx;
+  dynamic? shareAdTrack;
+  dynamic? favoriteAdTrack;
+  dynamic? webAdTrack;
+  int? date;
+  dynamic? promotion;
+  dynamic? label;
+  List<dynamic>? labelList;
+  String? descriptionEditor;
+  bool? collected;
+  bool? reallyCollected;
+  bool? played;
+  List<dynamic>? subtitles;
+  dynamic? lastViewTime;
+  dynamic? playlists;
+  int? src;
+  String? recallSource;
+  String? metroItemRecallSource;
+  int? candidateId;
+  String? sourceUrl;
+  int? tailTimePoint;
+  int? createTime;
+  int? updateTime;
+  String? infoStatus;
+  String? status;
+  bool? showLabel;
+  dynamic? premiereDate;
+  List<dynamic>? areaSet;
+  String? subtitleStatus;
+  String? translateStatus;
 
   factory ItemListData.fromJson(Map<String, dynamic> json) => ItemListData(
     dataType: json["dataType"] == null ? null : itemListDataTypeEnumValues.map![json["dataType"]],
     header: json["header"] == null ? null : Header.fromJson(json["header"]),
     content: json["content"] == null ? null : Content.fromJson(json["content"]),
     adTrack: json["adTrack"] == null ? null : List<dynamic>.from(json["adTrack"].map((x) => x)),
+    id: json["id"] == null ? null : json["id"].toString(),
+    type: json["type"] == null ? null : json["type"],
+    text: json["text"] == null ? null : json["text"],
+    subTitle: json["subTitle"] == null ? null : json["subTitle"],
+    actionUrl: json["actionUrl"] == null ? null : json["actionUrl"],
+
+    title: json["title"] == null ? null : json["title"],
+    description: json["description"] == null ? null : json["description"],
+    metroItemLibrary: json["library"] == null ? null : json["library"],
+    tags: json["tags"] == null ? null : List<Tag>.from(json["tags"].map((x) => Tag.fromJson(x))),
+    consumption: json["consumption"] == null ? null : Consumption.fromJson(json["consumption"]),
+    resourceType: json["resourceType"] == null ? null : json["resourceType"],
+    slogan: json["slogan"],
+    provider: json["provider"] == null ? null : ZCLProvider.fromJson(json["provider"]),
+    category: json["category"] == null ? null : json["category"],
+    author: json["author"] == null ? null : Author.fromJson(json["author"]),
+    cover: json["cover"] == null ? null : Cover.fromJson(json["cover"]),
+    playUrl: json["playUrl"] == null ? null : json["playUrl"],
+    thumbPlayUrl: json["thumbPlayUrl"],
+    duration: json["duration"] == null ? null : json["duration"],
+    webUrl: json["webUrl"] == null ? null : WebUrl.fromJson(json["webUrl"]),
+    releaseTime: json["releaseTime"] == null ? null : json["releaseTime"],
+    playInfo: json["playInfo"] == null ? null : List<PlayInfo>.from(json["playInfo"].map((x) => PlayInfo.fromJson(x))),
+    campaign: json["campaign"],
+    waterMarks: json["waterMarks"],
+    ad: json["ad"] == null ? null : json["ad"],
+    titlePgc: json["titlePgc"] == null ? null : json["titlePgc"],
+    descriptionPgc: json["descriptionPgc"] == null ? null : json["descriptionPgc"],
+    remark: json["remark"],
+    ifLimitVideo: json["ifLimitVideo"] == null ? null : json["ifLimitVideo"],
+    searchWeight: json["searchWeight"] == null ? null : json["searchWeight"],
+    brandWebsiteInfo: json["brandWebsiteInfo"],
+    videoPosterBean: json["videoPosterBean"],
+    idx: json["idx"] == null ? null : json["idx"],
+    shareAdTrack: json["shareAdTrack"],
+    favoriteAdTrack: json["favoriteAdTrack"],
+    webAdTrack: json["webAdTrack"],
+    date: json["date"] == null ? null : json["date"],
+    promotion: json["promotion"],
+    label: json["label"],
+    labelList: json["labelList"] == null ? null : List<dynamic>.from(json["labelList"].map((x) => x)),
+    descriptionEditor: json["descriptionEditor"] == null ? null : json["descriptionEditor"],
+    collected: json["collected"] == null ? null : json["collected"],
+    reallyCollected: json["reallyCollected"] == null ? null : json["reallyCollected"],
+    played: json["played"] == null ? null : json["played"],
+    subtitles: json["subtitles"] == null ? null : List<dynamic>.from(json["subtitles"].map((x) => x)),
+    lastViewTime: json["lastViewTime"],
+    playlists: json["playlists"],
+    src: json["src"] == null ? null : json["src"],
+    recallSource: json["recallSource"] == null ? null : json["recallSource"],
+    metroItemRecallSource: json["recall_source"] == null ? null : json["recall_source"],
+    candidateId: json["candidateId"] == null ? null : json["candidateId"],
+    sourceUrl: json["sourceUrl"] == null ? null : json["sourceUrl"],
+    tailTimePoint: json["tailTimePoint"] == null ? null : json["tailTimePoint"],
+    createTime: json["createTime"] == null ? null : json["createTime"],
+    updateTime: json["updateTime"] == null ? null : json["updateTime"],
+    infoStatus: json["infoStatus"] == null ? null : json["infoStatus"],
+    status: json["status"] == null ? null : json["status"],
+    showLabel: json["showLabel"] == null ? null : json["showLabel"],
+    premiereDate: json["premiereDate"],
+    areaSet: json["areaSet"] == null ? null : List<dynamic>.from(json["areaSet"].map((x) => x)),
+    subtitleStatus: json["subtitleStatus"] == null ? null : json["subtitleStatus"],
+    translateStatus: json["translateStatus"] == null ? null : json["translateStatus"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -121,6 +314,69 @@ class ItemListData {
     "header": header == null ? null : header!.toJson(),
     "content": content == null ? null : content!.toJson(),
     "adTrack": adTrack == null ? null : List<dynamic>.from(adTrack!.map((x) => x)),
+    "id": id == null ? null : id,
+    "type": type == null ? null : type,
+    "text": text == null ? null : text,
+    "subTitle": subTitle == null ? null : subTitle,
+    "actionUrl": actionUrl == null ? null : actionUrl,
+
+    "title": title == null ? null : title,
+    "description": description == null ? null : description,
+    "library": metroItemLibrary == null ? null : metroItemLibrary,
+    "tags": tags == null ? null : List<dynamic>.from(tags!.map((x) => x.toJson())),
+    "consumption": consumption == null ? null : consumption!.toJson(),
+    "resourceType": resourceType == null ? null : resourceType,
+    "slogan": slogan,
+    "provider": provider == null ? null : provider!.toJson(),
+    "category": category == null ? null : category,
+    "author": author == null ? null : author!.toJson(),
+    "cover": cover == null ? null : cover!.toJson(),
+    "playUrl": playUrl == null ? null : playUrl,
+    "thumbPlayUrl": thumbPlayUrl,
+    "duration": duration == null ? null : duration,
+    "webUrl": webUrl == null ? null : webUrl!.toJson(),
+    "releaseTime": releaseTime == null ? null : releaseTime,
+    "playInfo": playInfo == null ? null : List<dynamic>.from(playInfo!.map((x) => x.toJson())),
+    "campaign": campaign,
+    "waterMarks": waterMarks,
+    "ad": ad == null ? null : ad,
+    "titlePgc": titlePgc == null ? null : titlePgc,
+    "descriptionPgc": descriptionPgc == null ? null : descriptionPgc,
+    "remark": remark,
+    "ifLimitVideo": ifLimitVideo == null ? null : ifLimitVideo,
+    "searchWeight": searchWeight == null ? null : searchWeight,
+    "brandWebsiteInfo": brandWebsiteInfo,
+    "videoPosterBean": videoPosterBean,
+    "idx": idx == null ? null : idx,
+    "shareAdTrack": shareAdTrack,
+    "favoriteAdTrack": favoriteAdTrack,
+    "webAdTrack": webAdTrack,
+    "date": date == null ? null : date,
+    "promotion": promotion,
+    "label": label,
+    "labelList": labelList == null ? null : List<dynamic>.from(labelList!.map((x) => x)),
+    "descriptionEditor": descriptionEditor == null ? null : descriptionEditor,
+    "collected": collected == null ? null : collected,
+    "reallyCollected": reallyCollected == null ? null : reallyCollected,
+    "played": played == null ? null : played,
+    "subtitles": subtitles == null ? null : List<dynamic>.from(subtitles!.map((x) => x)),
+    "lastViewTime": lastViewTime,
+    "playlists": playlists,
+    "src": src == null ? null : src,
+    "recallSource": recallSource == null ? null : recallSource,
+    "recall_source": metroItemRecallSource == null ? null : metroItemRecallSource,
+    "candidateId": candidateId == null ? null : candidateId,
+    "sourceUrl": sourceUrl == null ? null : sourceUrl,
+    "tailTimePoint": tailTimePoint == null ? null : tailTimePoint,
+    "createTime": createTime == null ? null : createTime,
+    "updateTime": updateTime == null ? null : updateTime,
+    "infoStatus": infoStatus == null ? null : infoStatus,
+    "status": status == null ? null : status,
+    "showLabel": showLabel == null ? null : showLabel,
+    "premiereDate": premiereDate,
+    "areaSet": areaSet == null ? null : List<dynamic>.from(areaSet!.map((x) => x)),
+    "subtitleStatus": subtitleStatus == null ? null : subtitleStatus,
+    "translateStatus": translateStatus == null ? null : translateStatus,
   };
 }
 

@@ -1,5 +1,6 @@
 import 'package:eyepetizer/core/model/discovery_nav_model.dart';
 import 'package:eyepetizer/core/viewmodel/discovery_view_model.dart';
+import 'package:eyepetizer/ui/pages/detail/search.dart';
 import 'package:eyepetizer/ui/shared/KeepAliveWrapper.dart';
 import 'package:eyepetizer/ui/shared/size_fit.dart';
 import 'package:eyepetizer/ui/widgets/card_widget.dart';
@@ -22,19 +23,25 @@ class ZCLDiscoveryPage extends StatelessWidget {
         Scaffold(
           appBar: _buildSearchBar(ctx, discoveryVM.discoveryNavModel!),
           body: Container(
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: ClampingScrollPhysics(),
-              itemCount: discoveryVM.discoveryModel!.cards!.length + 1,
-              itemBuilder: (ctx, index) {
-                if (index == discoveryVM.discoveryModel!.cards!.length) {
-                  return _buildFooter(ctx);
+            child: RefreshIndicator(
+              color: Colors.black,
+              onRefresh: () {
+                return discoveryVM.update();
+              },
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: ClampingScrollPhysics(),
+                itemCount: discoveryVM.discoveryModel!.cards!.length + 1,
+                itemBuilder: (ctx, index) {
+                  if (index == discoveryVM.discoveryModel!.cards!.length) {
+                    return _buildFooter(ctx);
+                  }
+                  return KeepAliveWrapper(
+                    keepAlive: true,
+                    child: Padding(padding: EdgeInsets.only(top: 20.px), child: ZCLCardWidget(model: discoveryVM.discoveryModel!.cards![index]))
+                  );
                 }
-                return KeepAliveWrapper(
-                  keepAlive: true,
-                  child: Padding(padding: EdgeInsets.only(top: 20.px), child: ZCLCardWidget(model: discoveryVM.discoveryModel!.cards![index]))
-                );
-              }
+              ),
             ),
           )
         );
@@ -49,7 +56,7 @@ class ZCLDiscoveryPage extends StatelessWidget {
       title: ListTile(
         title: GestureDetector(
           onTap: () {
-            // todo: 搜索跳转
+            Navigator.of(context).pushNamed(ZCLSearchPage.routeName);
           },
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 8.px),

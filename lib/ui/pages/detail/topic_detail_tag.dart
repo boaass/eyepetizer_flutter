@@ -1,13 +1,19 @@
 import 'dart:ui';
 
 import 'package:date_format/date_format.dart';
+import 'package:eyepetizer/core/model/card_model.dart';
 import 'package:eyepetizer/core/model/tabinfo_model.dart';
 import 'package:eyepetizer/core/model/topic_detail_tag_model.dart';
 import 'package:eyepetizer/core/viewmodel/topic_detail_tag_view_model.dart';
 import 'package:eyepetizer/ui/shared/size_fit.dart';
+import 'package:eyepetizer/ui/widgets/detail_widgets/follow_card_video_bean_for_client.dart';
+import 'package:eyepetizer/ui/widgets/detail_widgets/small_video_bean_for_client.dart';
 import 'package:eyepetizer/ui/widgets/detail_widgets/ugc_picture_bean_widget.dart';
 import 'package:eyepetizer/ui/widgets/detail_widgets/ugc_video_bean_widget.dart';
+import 'package:eyepetizer/ui/widgets/detail_widgets/auto_play_video_bean_for_client.dart';
 import 'package:eyepetizer/ui/widgets/expandable_pageview.dart';
+import 'package:eyepetizer/ui/widgets/metro_widgets/card_title.dart';
+import 'package:eyepetizer/ui/widgets/metro_widgets/feed_cover_small_video.dart';
 import 'package:eyepetizer/ui/widgets/slider_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -28,6 +34,7 @@ class _ZCLTopicDetailTagPageState extends State<ZCLTopicDetailTagPage> {
 
   final double appBarHeight = 80;
   ScrollController _scrollController = ScrollController();
+  ScrollController _pageScrollController = ScrollController();
   late PageController _pageController = PageController(initialPage: Provider.of<ZCLTopicDetailTagViewModel>(context, listen: false).initTabIndex);
   double _appBarOpacity = 0;
   late int _currentIndex = Provider.of<ZCLTopicDetailTagViewModel>(context, listen: false).initTabIndex;
@@ -185,19 +192,24 @@ class _ZCLTopicDetailTagPageState extends State<ZCLTopicDetailTagPage> {
 
   _buildTag(ZCLTabInfo tabInfo) {
     return Container(
+      height: 250.px,
       child: Stack(
+        fit: StackFit.expand,
         alignment: Alignment.center,
         children: [
           Stack(
+            fit: StackFit.expand,
             children: [
-              Image.network(tabInfo.tagInfo!.headerImage!,),
+              Image.network(tabInfo.tagInfo!.headerImage!, fit: BoxFit.fill,),
               BackdropFilter( // 可实现高斯模糊，此处用来将原图片变暗
                 filter: ImageFilter.blur(sigmaX: 0.5, sigmaY: 0.5),
-                child: Image.network(tabInfo.tagInfo!.bgPicture!, color: Colors.black.withOpacity(0.3),),
+                child: Image.network(tabInfo.tagInfo!.bgPicture!, fit: BoxFit.fill, color: Colors.black.withOpacity(0.3),),
               ),
             ]
           ),
           Positioned(
+            left: 10.px,
+            right: 10.px,
             bottom: 20.px,
             child: Container(
               child: Column(
@@ -205,9 +217,15 @@ class _ZCLTopicDetailTagPageState extends State<ZCLTopicDetailTagPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(tabInfo.tagInfo!.name!, style: Theme.of(context).textTheme.headline1!.copyWith(color: Colors.white, fontWeight: FontWeight.bold),),
+                  tabInfo.tagInfo!.description == null || tabInfo.tagInfo!.description!.isEmpty ? Container() :
                   Padding(
                     padding: EdgeInsets.only(top: 15.px),
-                    child: Text(tabInfo.tagInfo!.description!, style: Theme.of(context).textTheme.headline3!.copyWith(color: Colors.white)),
+                    child: Text(
+                      tabInfo.tagInfo!.description ?? "",
+                      style: Theme.of(context).textTheme.headline3!.copyWith(color: Colors.white),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 15.px),
@@ -287,14 +305,38 @@ class _ZCLTopicDetailTagPageState extends State<ZCLTopicDetailTagPage> {
 
   _buildPageItem(ItemList item) {
     Widget widget = Container();
-    if (item.type == ItemListType.PICTURE_FOLLOW_CARD || item.type == ItemListType.AUTO_PLAY_FOLLOW_CARD) {
+    
+    if (item.type == ItemListType.TEXT_CARD) {
+      final metro = ZCLMetro(text: item.data!.text!);
+      widget = ZCLCardTitle(model: metro);
+    } else if (item.type == ItemListType.FOLLOW_CARD) {
       if (item.data!.dataType == ItemListDataType.FOLLOW_CARD) {
-        if (item.data!.content!.type == ContentType.UGC_PICTURE || item.data!.content!.type == ContentType.VIDEO) {
+        if (item.data!.content!.type == ContentType.VIDEO) {
+          if (item.data!.content!.data!.dataType == ContentDataType.VIDEO_BEAN_FOR_CLIENT) {
+            widget = ZCLFollowCardVideoBeanForClientWidget(item: item);
+          }
+        }
+      }
+    } else if (item.type == ItemListType.VIDEO_SMALL_CARD) {
+      if (item.data!.dataType == ItemListDataType.VIDEO_BEAN_FOR_CLIENT) {
+        widget = ZCLSmallVideoBeanForClient(item: item);
+      }
+    } else if (item.type == ItemListType.PICTURE_FOLLOW_CARD) {
+      if (item.data!.dataType == ItemListDataType.FOLLOW_CARD) {
+        if (item.data!.content!.type == ContentType.UGC_PICTURE) {
           if (item.data!.content!.data!.dataType ==
               ContentDataType.UGC_PICTURE_BEAN) {
             widget = ZCLUGCPictureBeanWidget(item: item);
-          } else if (item.data!.content!.data!.dataType == ContentDataType.UGC_VIDEO_BEAN) {
+          }
+        }
+      }
+    } else if (item.type == ItemListType.AUTO_PLAY_FOLLOW_CARD) {
+      if (item.data!.dataType == ItemListDataType.FOLLOW_CARD) {
+        if (item.data!.content!.type == ContentType.VIDEO) {
+          if (item.data!.content!.data!.dataType == ContentDataType.UGC_VIDEO_BEAN) {
             widget = ZCLUGCVideoBeanWidget(item: item);
+          } else if (item.data!.content!.data!.dataType == ContentDataType.VIDEO_BEAN_FOR_CLIENT) {
+            widget = ZCLAutoPlayVideoBeanForClientWidget(item: item);
           }
         }
       }

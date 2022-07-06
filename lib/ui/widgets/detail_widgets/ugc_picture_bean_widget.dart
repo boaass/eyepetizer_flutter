@@ -1,7 +1,13 @@
 import 'package:date_format/date_format.dart';
 import 'package:eyepetizer/core/model/topic_detail_tag_model.dart';
+import 'package:eyepetizer/core/viewmodel/topic_detail_view_model.dart';
+import 'package:eyepetizer/core/viewmodel/ugc_pic_detail_view_model.dart';
+import 'package:eyepetizer/core/viewmodel/user_center_view_model.dart';
+import 'package:eyepetizer/ui/pages/detail/ugc_pic_detail.dart';
+import 'package:eyepetizer/ui/pages/detail/user_center.dart';
 import 'package:flutter/material.dart';
 import 'package:eyepetizer/core/extention/num_extention.dart';
+import 'package:provider/provider.dart';
 
 import '../expandable_text.dart';
 
@@ -23,33 +29,39 @@ class _ZCLUGCPictureBeanWidgetState extends State<ZCLUGCPictureBeanWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            child: ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: CircleAvatar(foregroundImage: NetworkImage(widget.item
-                    .data!.content!.data!.owner!.avatar!)),
-                title: Text(widget.item.data!.content!.data!.owner!.nickname!,
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .headline3!
-                        .copyWith(fontWeight: FontWeight.bold)),
-                subtitle: Text("${_formatTimestamp(widget.item.data!.content!
-                    .data!.createTime!)} 发布:"),
-                trailing: widget.item.data!.header!.topShow! ? Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.blue),
-                      borderRadius: BorderRadius.circular(5)
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    child: Text("置顶", style: Theme
-                        .of(context)
-                        .textTheme
-                        .headline4!
-                        .copyWith(color: Colors.blue),),
-                  ),
-                ) : Container(width: 1,)
+          GestureDetector(
+            onTap: () {
+              Provider.of<ZCLUserCenterNotifier>(context, listen: false).link = widget.item.data!.content!.data!.uid!;
+              Navigator.of(context).pushNamed(ZCLUserCenterPage.routeName);
+            },
+            child: Container(
+              child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: CircleAvatar(foregroundImage: NetworkImage(widget.item
+                      .data!.content!.data!.owner!.avatar!)),
+                  title: Text(widget.item.data!.content!.data!.owner!.nickname!,
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .headline3!
+                          .copyWith(fontWeight: FontWeight.bold)),
+                  subtitle: Text("${_formatTimestamp(widget.item.data!.content!
+                      .data!.createTime!)} 发布:"),
+                  trailing: widget.item.data!.header!.topShow! ? Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.blue),
+                        borderRadius: BorderRadius.circular(5)
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Text("置顶", style: Theme
+                          .of(context)
+                          .textTheme
+                          .headline4!
+                          .copyWith(color: Colors.blue),),
+                    ),
+                  ) : Container(width: 1,)
+              ),
             ),
           ),
           widget.item.data!.content!.data!.description == "" ? Container() :
@@ -113,9 +125,16 @@ class _ZCLUGCPictureBeanWidgetState extends State<ZCLUGCPictureBeanWidget> {
               ],));
           }
           return MapEntry(key, Image.network(value, fit: BoxFit.fill,));
-        }).values.toList() : data.urls!.asMap().map((key, value) {
+        }).values.map((e) => GestureDetector(onTap: () {
+          Provider.of<ZCLUgcPicDetailNotifier>(context, listen: false).id = data.id.toString();
+          Navigator.of(context).pushNamed(ZCLUgcPicDetailPage.routeName);
+        }, child: e)).toList() :
+        data.urls!.asMap().map((key, value) {
           return MapEntry(key, Image.network(value, fit: BoxFit.fill));
-        }).values.toList(),
+        }).values.map((e) => GestureDetector(onTap: () {
+          Provider.of<ZCLUgcPicDetailNotifier>(context, listen: false).id = data.id.toString();
+          Navigator.of(context).pushNamed(ZCLUgcPicDetailPage.routeName);
+        }, child: e)).toList(),
       ),
     );
   }
