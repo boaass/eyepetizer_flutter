@@ -2,7 +2,9 @@ import 'package:date_format/date_format.dart';
 import 'package:eyepetizer/core/model/card_model.dart';
 import 'package:eyepetizer/core/viewmodel/topic_detail_view_model.dart';
 import 'package:eyepetizer/ui/pages/detail/topic_detail.dart';
+import 'package:eyepetizer/ui/pages/detail/topic_detail_light.dart';
 import 'package:eyepetizer/ui/pages/detail/topic_detail_tag.dart';
+import 'package:eyepetizer/ui/shared/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:eyepetizer/core/extention/num_extention.dart';
 import 'package:provider/provider.dart';
@@ -23,8 +25,11 @@ class _ZCLFeedCoverDetailTopicState extends State<ZCLFeedCoverDetailTopic> {
       children: [
         GestureDetector(
           onTap: () {
-            Provider.of<ZCLTopicDetailNotifier>(context, listen: false).link = Uri.decodeFull(widget.model!.link!);
-            Navigator.of(context).pushNamed(ZCLTopicDetailTagPage.routeName);
+            // Provider.of<ZCLTopicDetailNotifier>(context, listen: false).link = Uri.decodeFull(widget.model!.link!);
+            // Navigator.of(context).pushNamed(ZCLTopicDetailTagPage.routeName);
+
+            Provider.of<ZCLTopicDetailNotifier>(context, listen: false).link = widget.model?.link ?? "";
+            _jumpPageFromLink(context, Provider.of<ZCLTopicDetailNotifier>(context, listen: false).link);
           },
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 10.px),
@@ -69,5 +74,21 @@ class _ZCLFeedCoverDetailTopicState extends State<ZCLFeedCoverDetailTopic> {
         )
       ],
     );
+  }
+
+  _jumpPageFromLink(BuildContext context, String link) {
+    if (link.startsWith("eyepetizer://tag")) {
+      Navigator.of(context).pushNamed(ZCLTopicDetailTagPage.routeName);
+    } else if (link.startsWith("eyepetizer://lightTopic")) {
+      Navigator.of(context).pushNamed(ZCLTopicDetailLightPage.routeName);
+    } else if (link.startsWith("eyepetizer://webview")) {
+      String encodeUrl = link.split("url=").last;
+      String decodeUrl = Uri.decodeFull(encodeUrl);
+      ZCLUtils.launchUrl(decodeUrl);
+    } else if (link.startsWith("https://")) {
+      ZCLUtils.launchUrl(link);
+    } else {
+      Navigator.of(context).pushNamed(ZCLTopicDetailPage.routeName);
+    }
   }
 }
