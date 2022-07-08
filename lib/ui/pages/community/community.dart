@@ -23,13 +23,21 @@ class _ZCLCommunityPageState extends State<ZCLCommunityPage> {
   @override
   void initState() {
 
-    _scrollController.addListener(() {
-      if (_scrollController.offset == _scrollController.position.maxScrollExtent) {
-        _loadMore();
-      }
-    });
+    _scrollController.addListener(_listener);
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_listener);
+    super.dispose();
+  }
+
+  _listener() {
+    if (_scrollController.offset == _scrollController.position.maxScrollExtent) {
+      _loadMore();
+    }
   }
 
   @override

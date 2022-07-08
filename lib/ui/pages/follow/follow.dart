@@ -22,18 +22,21 @@ class _ZCLFollowPageState extends State<ZCLFollowPage> {
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-        _loadMore();
-      }
-    });
+    _scrollController.addListener(_listener);
   }
 
   @override
   void dispose() {
+    _scrollController.removeListener(_listener);
     _scrollController.dispose();
 
     super.dispose();
+  }
+
+  _listener() {
+    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      _loadMore();
+    }
   }
 
   @override

@@ -34,17 +34,19 @@ class _ZCLVideoDetailPageState extends State<ZCLVideoDetailPage> {
   void initState() {
     super.initState();
 
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-        _loadMoreReply();
-        return;
-      }
-      if (_scrollController.position.pixels < 0) {
-        setState(() {
-          _topMargin = -_scrollController.position.pixels;
-        });
-      }
-    });
+    _scrollController.addListener(_listener);
+  }
+
+  _listener() {
+    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      _loadMoreReply();
+      return;
+    }
+    if (_scrollController.position.pixels < 0) {
+      setState(() {
+        _topMargin = -_scrollController.position.pixels;
+      });
+    }
   }
 
   @override
@@ -54,6 +56,8 @@ class _ZCLVideoDetailPageState extends State<ZCLVideoDetailPage> {
 
   @override
   void dispose() {
+    _scrollController.removeListener(_listener);
+    _scrollController.dispose();
     super.dispose();
   }
 

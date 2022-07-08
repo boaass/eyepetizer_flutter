@@ -24,21 +24,24 @@ class _ZCLSearchPageState extends State<ZCLSearchPage> with TickerProviderStateM
 
   @override
   void initState() {
-    _scrollController.addListener(() {
-      if (_scrollController.offset >= _scrollController.position.maxScrollExtent) {
-        Provider.of<ZCLSearchRecommendViewModel>(context, listen: false).loadMore(_currentPageIndex);
-      }
-    });
+    _scrollController.addListener(_listener);
 
     super.initState();
   }
 
   @override
   void dispose() {
+    _scrollController.removeListener(_listener);
     _pageController.dispose();
     _tabController?.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  _listener() {
+    if (_scrollController.offset >= _scrollController.position.maxScrollExtent) {
+      Provider.of<ZCLSearchRecommendViewModel>(context, listen: false).loadMore(_currentPageIndex);
+    }
   }
 
   @override

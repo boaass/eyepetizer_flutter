@@ -27,16 +27,24 @@ class _ZCLNotificationPageState extends State<ZCLNotificationPage> {
     super.initState();
 
     _pageController = PageController();
-    _pageController?.addListener(() {
-      final offset = _pageController?.offset;
-      _percent = offset!/ZCLSizeFit.screenWidth!;
-      setState(() {
-        if (_percent < 0) {
-          _percent = 0;
-        } else if (_percent > 1) {
-          _percent = 1;
-        }
-      });
+    _pageController?.addListener(_listener);
+  }
+
+  @override
+  void dispose() {
+    _pageController?.removeListener(_listener);
+    super.dispose();
+  }
+
+  _listener() {
+    final offset = _pageController?.offset;
+    _percent = offset!/ZCLSizeFit.screenWidth!;
+    setState(() {
+      if (_percent < 0) {
+        _percent = 0;
+      } else if (_percent > 1) {
+        _percent = 1;
+      }
     });
   }
 

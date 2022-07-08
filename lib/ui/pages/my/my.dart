@@ -9,6 +9,11 @@ class ZCLMyPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text("我的");
+    return Scaffold(
+      body: Container(
+        alignment: Alignment.center,
+        child: Text("我的")
+      )
+    );
   }
 }

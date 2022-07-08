@@ -41,26 +41,29 @@ class _ZCLRecommendPageState extends State<ZCLRecommendPage> {
       Overlay.of(context)!.insert(sticky!);
     });
 
-    _scrollController.addListener(() {
-      // print(_scrollController.position.pixels);
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-        _loadMore();
-      } else if (Provider.of<ZCLRecommendViewModel>(context, listen: false).isBigVideoNeedShow && _firstItemHeight != 0 && _scrollController.position.pixels >= _firstItemHeight) {
-        setState(() {
-          Provider.of<ZCLRecommendViewModel>(context, listen: false).isBigVideoNeedShow = false;
-        });
-      }
-    });
+    _scrollController.addListener(_listener);
 
     super.initState();
   }
 
   @override
   void dispose() {
+    _scrollController.removeListener(_listener);
+    _scrollController.dispose();
     sticky?.dispose();
     // _scrollController.dispose(); // 被其他控件引用时，会被其他控件 dispose()，重复 dispose() 报错
 
     super.dispose();
+  }
+
+  _listener() {
+    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      _loadMore();
+    } else if (Provider.of<ZCLRecommendViewModel>(context, listen: false).isBigVideoNeedShow && _firstItemHeight != 0 && _scrollController.position.pixels >= _firstItemHeight) {
+      setState(() {
+        Provider.of<ZCLRecommendViewModel>(context, listen: false).isBigVideoNeedShow = false;
+      });
+    }
   }
 
   @override
@@ -72,30 +75,30 @@ class _ZCLRecommendPageState extends State<ZCLRecommendPage> {
         }
         _viewModel = recommendVM;
         _isLoading = false;
-        if (recommendVM.cardPageModel.cards == null) {
+        if (recommendVM.cardPageModel!.cards == null) {
           return Container(height: 1,);
         }
         return RefreshIndicator(
           color: Colors.black,
           onRefresh: (){
-            return recommendVM.update();
+            return recommendVM.refresh();
           },
           child: ListView.builder(
             controller: _scrollController,
             shrinkWrap: true,
             itemBuilder: (ctx, index) {
-              List? metros = recommendVM.cardPageModel.cards?[index].body!.metro_list;
+              List? metros = recommendVM.cardPageModel!.cards?[index].body!.metro_list;
               if (metros == null || metros.length == 0) {
                 return Container(height: 1);
               }
               if (index == 0) {
-                recommendVM.cardPageModel.cards![index].body!.metro_list![0].videoPlayerAspectRatio = recommendVM.isBigVideoNeedShow?1:0;
-                recommendVM.cardPageModel.cards![index].body!.metro_list![0].stickyKey = stickyKey;
-                return ZCLCardWidget(model: recommendVM.cardPageModel.cards![index],);
+                recommendVM.cardPageModel!.cards![index].body!.metro_list![0].videoPlayerAspectRatio = recommendVM.isBigVideoNeedShow?1:0;
+                recommendVM.cardPageModel!.cards![index].body!.metro_list![0].stickyKey = stickyKey;
+                return ZCLCardWidget(model: recommendVM.cardPageModel!.cards![index],);
               }
-              return ZCLCardWidget(model: recommendVM.cardPageModel.cards![index],);
+              return ZCLCardWidget(model: recommendVM.cardPageModel!.cards![index],);
             },
-            itemCount: recommendVM.cardPageModel.cards!.length,
+            itemCount: recommendVM.cardPageModel!.cards!.length,
           ),
         );
       }

@@ -34,7 +34,6 @@ class _ZCLTopicDetailTagPageState extends State<ZCLTopicDetailTagPage> {
 
   final double appBarHeight = 80;
   ScrollController _scrollController = ScrollController();
-  ScrollController _pageScrollController = ScrollController();
   late PageController _pageController = PageController(initialPage: Provider.of<ZCLTopicDetailTagViewModel>(context, listen: false).initTabIndex);
   double _appBarOpacity = 0;
   late int _currentIndex = Provider.of<ZCLTopicDetailTagViewModel>(context, listen: false).initTabIndex;
@@ -56,27 +55,37 @@ class _ZCLTopicDetailTagPageState extends State<ZCLTopicDetailTagPage> {
       Overlay.of(context)!.insert(sticky!);
     });
 
-    _scrollController.addListener(() {
-      double opacity = _scrollController.offset / 100;
-      setState(() {
-        _appBarOpacity = opacity > 1 ? 1 : opacity < 0 ? 0 : opacity;
-      });
-
-      if (!_isPageViewHeaderShow && _pageViewHeaderPosY != 0 && _scrollController.offset >= _pageViewHeaderPosY && _scrollController.position.userScrollDirection == ScrollDirection.reverse) {
-        setState(() {
-          _isPageViewHeaderShow = true;
-        });
-      } else if (_isPageViewHeaderShow && _pageViewHeaderPosY != 0 && _scrollController.offset <= _pageViewHeaderPosY && _scrollController.position.userScrollDirection == ScrollDirection.forward) {
-        setState(() {
-          _isPageViewHeaderShow = false;
-        });
-      }
-      if (_scrollController.offset == _scrollController.position.maxScrollExtent) {
-        _loadMore();
-      }
-    });
+    _scrollController.addListener(_listener);
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_listener);
+    _scrollController.dispose();
+    sticky!.dispose();
+    super.dispose();
+  }
+
+  _listener() {
+    double opacity = _scrollController.offset / 100;
+    setState(() {
+      _appBarOpacity = opacity > 1 ? 1 : opacity < 0 ? 0 : opacity;
+    });
+
+    if (!_isPageViewHeaderShow && _pageViewHeaderPosY != 0 && _scrollController.offset >= _pageViewHeaderPosY && _scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+      setState(() {
+        _isPageViewHeaderShow = true;
+      });
+    } else if (_isPageViewHeaderShow && _pageViewHeaderPosY != 0 && _scrollController.offset <= _pageViewHeaderPosY && _scrollController.position.userScrollDirection == ScrollDirection.forward) {
+      setState(() {
+        _isPageViewHeaderShow = false;
+      });
+    }
+    if (_scrollController.offset == _scrollController.position.maxScrollExtent) {
+      _loadMore();
+    }
   }
 
   // 获取列表第一个元素的位置
@@ -102,13 +111,6 @@ class _ZCLTopicDetailTagPageState extends State<ZCLTopicDetailTagPage> {
         return Container();
       },
     );
-  }
-
-  @override
-  void dispose() {
-    // _pageController.dispose();
-    sticky!.dispose();
-    super.dispose();
   }
 
   @override

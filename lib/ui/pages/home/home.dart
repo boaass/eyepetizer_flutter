@@ -38,7 +38,17 @@ class _ZCLHomePageState extends State<ZCLHomePage> {
     // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     return Consumer<ZCLRecommendViewModel>(
       builder: (ctx, vm, child) {
-        return Scaffold(
+        return vm.cardPageModel == null ? RefreshIndicator(
+          onRefresh: () {
+            return vm.refresh();
+          },
+          child: Scaffold(
+            body: SingleChildScrollView(
+              child: Container(alignment: Alignment.center, child: Text("下拉刷新")),
+            ),
+          ),
+        ) :
+        Scaffold(
           appBar: vm.isBigVideoNeedShow ? null : _buildAppBar(),
           body: PageView(
             controller: _pageController,

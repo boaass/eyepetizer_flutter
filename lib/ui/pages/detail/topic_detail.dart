@@ -40,33 +40,39 @@ class _ZCLTopicDetailPageState extends State<ZCLTopicDetailPage> {
       Overlay.of(context)!.insert(sticky!);
     });
 
-    _scrollController.addListener(() {
-      // print("offset: ${_scrollController.offset} --- ${_scrollController.position.userScrollDirection}");
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-        _reloadMoreItem();
-      }
-
-      if (!_isOnlyNavShow &&
-          _navBarInitPosY != 0 &&
-          (_scrollController.offset >= (_navBarInitPosY - 100)) &&
-          _scrollController.position.userScrollDirection == ScrollDirection.reverse) {
-        // 滑动到 navbar 位置
-        _ChangePage(true);
-      }
-
-      if (!_isOnlyNavShow) {
-        double opacity = _scrollController.offset / 100;
-        setState(() {
-          _opacity = opacity > 1 ? 1 : opacity < 0 ? 0 : opacity;
-        });
-      } else {
-        setState(() {
-          _opacity = 1;
-        });
-      }
-
-    });
+    _scrollController.addListener(_listener);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_listener);
+    super.dispose();
+  }
+
+  _listener() {
+    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      _reloadMoreItem();
+    }
+
+    if (!_isOnlyNavShow &&
+        _navBarInitPosY != 0 &&
+        (_scrollController.offset >= (_navBarInitPosY - 100)) &&
+        _scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+      // 滑动到 navbar 位置
+      _ChangePage(true);
+    }
+
+    if (!_isOnlyNavShow) {
+      double opacity = _scrollController.offset / 100;
+      setState(() {
+        _opacity = opacity > 1 ? 1 : opacity < 0 ? 0 : opacity;
+      });
+    } else {
+      setState(() {
+        _opacity = 1;
+      });
+    }
   }
 
   _ChangePage(bool showNav) {

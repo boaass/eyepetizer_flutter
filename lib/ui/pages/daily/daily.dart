@@ -23,15 +23,18 @@ class _ZCLDailyPageState extends State<ZCLDailyPage> {
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-        _loadMore();
-      }
-    });
+    _scrollController.addListener(_listener);
+  }
+
+  _listener() {
+    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      _loadMore();
+    }
   }
 
   @override
   void dispose() {
+    _scrollController.removeListener(_listener);
     _scrollController.dispose();
 
     super.dispose();

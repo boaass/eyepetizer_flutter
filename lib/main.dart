@@ -1,6 +1,7 @@
 import 'package:eyepetizer/core/viewmodel/community_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/daily_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/follow_view_model.dart';
+import 'package:eyepetizer/core/viewmodel/initial_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/recommend_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/search_recommend_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/topic_detail_light_view_model.dart';
@@ -23,6 +24,7 @@ main() {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (ctx) => ZCLInitialViewModel()),
         ChangeNotifierProvider(create: (ctx) => ZCLRecommendViewModel()),
         ChangeNotifierProvider(create: (ctx) => ZCLFollowViewModel()),
         ChangeNotifierProvider(create: (ctx) => ZCLDailyViewModel()),

@@ -33,6 +33,7 @@ class _ZCLUgcVideoDetailPageState extends State<ZCLUgcVideoDetailPage> {
 
   @override
   void dispose() {
+    _videoController?.removeListener(_listener);
     _videoController?.dispose();
     super.dispose();
   }
@@ -51,12 +52,14 @@ class _ZCLUgcVideoDetailPageState extends State<ZCLUgcVideoDetailPage> {
             _videoController?.setLooping(true);
           });
         });
-      _videoController?.addListener(() {
-        setState(() {
-          _progressValue = _videoController!.value.position.inSeconds / _videoController!.value.duration.inSeconds;
-        });
-      });
+      _videoController?.addListener(_listener);
     }
+  }
+
+  _listener() {
+    setState(() {
+      _progressValue = _videoController!.value.position.inSeconds / _videoController!.value.duration.inSeconds;
+    });
   }
 
   @override

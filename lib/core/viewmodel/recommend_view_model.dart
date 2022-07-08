@@ -7,12 +7,12 @@ import 'package:eyepetizer/core/viewmodel/base_view_model.dart';
 
 class ZCLRecommendViewModel extends ZCLBaseViewModel {
 
-  ZCLCardPageModel _cardPageModel = ZCLCardPageModel();
+  ZCLCardPageModel? _cardPageModel;
   bool _isBigVideoNeedShow = true;
 
-  ZCLCardPageModel get cardPageModel => _cardPageModel;
+  ZCLCardPageModel? get cardPageModel => _cardPageModel;
 
-  set cardPageModel(ZCLCardPageModel value) {
+  set cardPageModel(ZCLCardPageModel? value) {
     _cardPageModel = value;
     isBigVideoNeedShow = true;
     notifyListeners();
@@ -25,34 +25,31 @@ class ZCLRecommendViewModel extends ZCLBaseViewModel {
     notifyListeners();
   }
 
-  Future<void> update() async {
-    await ZCLRecommendRequest.getData().then<ZCLCardPageModel>((x) {
-      cardPageModel = x;
-      return cardPageModel;
-    });
-  }
-
   addMetroList(List<ZCLMetro> metros) {
-    cardPageModel.cards!.last.body!.metro_list!.addAll(metros);
+    cardPageModel!.cards!.last.body!.metro_list!.addAll(metros);
     notifyListeners();
   }
 
   requestMoreMetros() {
-    Params lastParams = cardPageModel.cards!.last.apiRequest!.params!;
+    Params lastParams = cardPageModel!.cards!.last.apiRequest!.params!;
     lastParams.lastItemId = (int.parse(lastParams.lastItemId!) + 10).toString();
-    cardPageModel.cards!.last.apiRequest!.params = lastParams;
-    ZCLMetroListRequest.getData(cardPageModel.cards!.last.apiRequest!.url!, lastParams.toJson()).then((value) {
+    cardPageModel!.cards!.last.apiRequest!.params = lastParams;
+    ZCLMetroListRequest.getData(cardPageModel!.cards!.last.apiRequest!.url!, lastParams.toJson()).then((value) {
       addMetroList(value.itemList!);
     });
   }
 
-  ZCLRecommendViewModel() {
-    ZCLRecommendRequest.getData().then<ZCLCardPageModel>((x) {
+  Future<void> refresh() async {
+    await ZCLRecommendRequest.getData().then<ZCLCardPageModel>((x) {
       cardPageModel = x;
-      return cardPageModel;
+      return Future.value(cardPageModel);
     }).onError((error, stackTrace) {
       print("$error \n $stackTrace");
-      return cardPageModel;
+      return Future.error(error!);
     });
+  }
+
+  ZCLRecommendViewModel() {
+    refresh();
   }
 }

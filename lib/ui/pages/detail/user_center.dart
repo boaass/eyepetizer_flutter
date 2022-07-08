@@ -44,26 +44,7 @@ class _ZCLUserCenterPageState extends State<ZCLUserCenterPage> with TickerProvid
   void initState() {
     _pageController = PageController(initialPage: _currentPageIndex);
 
-    _scrollController.addListener(() {
-
-      double opacity = _scrollController.offset / 100;
-      setState(() {
-        _appBarOpacity = opacity > 1 ? 1 : opacity < 0 ? 0 : opacity;
-      });
-
-      if (!_isPageViewHeaderShow && _pageViewHeaderPosY != 0 && _scrollController.offset >= _pageViewHeaderPosY && _scrollController.position.userScrollDirection == ScrollDirection.reverse) {
-        setState(() {
-          _isPageViewHeaderShow = true;
-        });
-      } else if (_isPageViewHeaderShow && _pageViewHeaderPosY != 0 && _scrollController.offset <= _pageViewHeaderPosY && _scrollController.position.userScrollDirection == ScrollDirection.forward) {
-        setState(() {
-          _isPageViewHeaderShow = false;
-        });
-      }
-      if (_scrollController.offset == _scrollController.position.maxScrollExtent) {
-        _loadMore();
-      }
-    });
+    _scrollController.addListener(_listener);
 
     if (sticky != null) {
       sticky?.remove();
@@ -78,11 +59,39 @@ class _ZCLUserCenterPageState extends State<ZCLUserCenterPage> with TickerProvid
 
   @override
   void dispose() {
+    _scrollController.removeListener(_listener);
     _scrollController.dispose();
     _tabController?.dispose();
     // _pageController?.dispose();
 
     super.dispose();
+  }
+
+  _listener() {
+    double opacity = _scrollController.offset / 100;
+    setState(() {
+      _appBarOpacity = opacity > 1 ? 1 : opacity < 0 ? 0 : opacity;
+    });
+
+    if (_scrollController.position.maxScrollExtent == 0) {
+      setState(() {
+        _isPageViewHeaderShow = false;
+      });
+      return;
+    }
+
+    if (!_isPageViewHeaderShow && _pageViewHeaderPosY != 0 && _scrollController.offset >= _pageViewHeaderPosY && _scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+      setState(() {
+        _isPageViewHeaderShow = true;
+      });
+    } else if (_isPageViewHeaderShow && _pageViewHeaderPosY != 0 && _scrollController.offset <= _pageViewHeaderPosY && _scrollController.position.userScrollDirection == ScrollDirection.forward) {
+      setState(() {
+        _isPageViewHeaderShow = false;
+      });
+    }
+    if (_scrollController.offset == _scrollController.position.maxScrollExtent) {
+      _loadMore();
+    }
   }
 
   @override
@@ -330,6 +339,7 @@ class _ZCLUserCenterPageState extends State<ZCLUserCenterPage> with TickerProvid
           _currentPageIndex = index;
         });
         _tabController!.index = index;
+        _scrollController.jumpTo(_scrollController.offset+1);
       },
       itemCount: userCenterVM.pageModels!.length,
       itemBuilder: (ctx, index) {

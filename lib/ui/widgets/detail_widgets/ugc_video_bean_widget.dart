@@ -8,6 +8,7 @@ import 'package:eyepetizer/ui/pages/detail/ugc_video_detail.dart';
 import 'package:eyepetizer/ui/pages/detail/user_center.dart';
 import 'package:eyepetizer/ui/pages/detail/video_detail.dart';
 import 'package:eyepetizer/ui/widgets/expandable_text.dart';
+import 'package:eyepetizer/ui/widgets/metro_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:eyepetizer/core/extention/num_extention.dart';
 import 'package:provider/provider.dart';
@@ -52,8 +53,8 @@ class _ZCLUGCVideoBeanWidgetState extends State<ZCLUGCVideoBeanWidget> {
         ..initialize().then((value) {
           setState(() {
             _videoPlayerController?.setVolume(0);
-            _videoPlayerController?.play();
-            _videoPlayerController?.setLooping(true);
+            // _videoPlayerController?.play();
+            // _videoPlayerController?.setLooping(true);
           });
         });
 
@@ -153,7 +154,14 @@ class _ZCLUGCVideoBeanWidgetState extends State<ZCLUGCVideoBeanWidget> {
           children: [
             AspectRatio(
               aspectRatio: 5/3, //_videoPlayerController!.value.aspectRatio,
-              child: VideoPlayer(_videoPlayerController!),
+              // child: VideoPlayer(_videoPlayerController!),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Image.network(data.cover!.feed!),
+                  Icon(Icons.play_arrow, size: 30.px, color: Colors.white,)
+                ],
+              ),
             ),
             Positioned(
               bottom: 0,

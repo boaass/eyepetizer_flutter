@@ -1,7 +1,9 @@
+import 'package:eyepetizer/core/viewmodel/initial_view_model.dart';
 import 'package:eyepetizer/ui/pages/main/initiallize_items.dart';
 import 'package:eyepetizer/ui/widgets/animation_bar_item.dart';
 import 'package:flutter/material.dart';
 import 'package:eyepetizer/core/extention/num_extention.dart';
+import 'package:provider/provider.dart';
 
 
 class ZCLMainPage extends StatefulWidget {
@@ -20,15 +22,20 @@ class _ZCLMainPageState extends State<ZCLMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: AppBar(
-      //   title: Text("eyepetizer", style: Theme.of(context).textTheme.headline3,),
-      // ),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: pages,
-      ),
-      bottomNavigationBar: _buildBottomAppBar()
+    return Consumer<ZCLInitialViewModel>(
+      builder: (ctx, initialVM, child) {
+        return initialVM.data == null ? Scaffold(body: Container()) :
+        Scaffold(
+          // appBar: AppBar(
+          //   title: Text("eyepetizer", style: Theme.of(context).textTheme.headline3,),
+          // ),
+            body: IndexedStack(
+              index: _currentIndex,
+              children: pages,
+            ),
+            bottomNavigationBar: _buildBottomAppBar()
+        );
+      }
     );
   }
 
