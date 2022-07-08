@@ -51,15 +51,26 @@ class _ZCLSearchPageState extends State<ZCLSearchPage> with TickerProviderStateM
         builder: (ctx, searchRecommendVM, child) {
           return Container(
             margin: EdgeInsets.symmetric(horizontal: 10.px),
-            child: SafeArea(
-              child:
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _buildSearchBar(),
-                  searchRecommendVM.isSearchPage ? _buildSearchPageBody(searchRecommendVM) : Expanded(child: _buildSearchResultPageBody(searchRecommendVM))
-                ],
-              )
+            child: searchRecommendVM.isSearchPage ?
+            SingleChildScrollView(
+              child: SafeArea(
+                child:  Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _buildSearchBar(),
+                    searchRecommendVM.isSearchPage ? _buildSearchPageBody(searchRecommendVM) : Expanded(child: _buildSearchResultPageBody(searchRecommendVM))
+                  ],
+                )
+              ),
+            ) :
+            SafeArea(
+                child:  Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _buildSearchBar(),
+                    searchRecommendVM.isSearchPage ? _buildSearchPageBody(searchRecommendVM) : Expanded(child: _buildSearchResultPageBody(searchRecommendVM))
+                  ],
+                )
             ),
           );
         },

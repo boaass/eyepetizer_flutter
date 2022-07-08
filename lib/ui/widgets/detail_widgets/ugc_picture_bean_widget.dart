@@ -5,6 +5,7 @@ import 'package:eyepetizer/core/viewmodel/ugc_pic_detail_view_model.dart';
 import 'package:eyepetizer/core/viewmodel/user_center_view_model.dart';
 import 'package:eyepetizer/ui/pages/detail/ugc_pic_detail.dart';
 import 'package:eyepetizer/ui/pages/detail/user_center.dart';
+import 'package:eyepetizer/ui/shared/size_fit.dart';
 import 'package:flutter/material.dart';
 import 'package:eyepetizer/core/extention/num_extention.dart';
 import 'package:provider/provider.dart';
@@ -97,45 +98,72 @@ class _ZCLUGCPictureBeanWidgetState extends State<ZCLUGCPictureBeanWidget> {
   }
 
   _buildFourPic(ContentData data) {
-    return Container(
-      margin: EdgeInsets.only(top: 10.px),
-      clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.px)
-      ),
-      child: GridView.count(
-        physics: NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        crossAxisCount: data.urls!.length == 1 ? 1 : 2,
-        mainAxisSpacing: 3.px,
-        crossAxisSpacing: 3.px,
-        childAspectRatio: 3/2,
-        children: data.urls!.length > 4 ? data.urls!.sublist(0, 4).asMap().map((key, value) {
-          if (key == 3) {
-            return MapEntry(key, Stack(
-              alignment: Alignment.center,
-              children: [
-                Positioned.fill(child: Image.network(value, fit: BoxFit.fill)),
-                Positioned.fill(
-                  child: Container(
-                    color: Colors.black.withOpacity(0.3),
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            height: 300.px,
+            margin: EdgeInsets.only(top: 10.px),
+            clipBehavior: Clip.hardEdge,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.px)
+            ),
+            child: GestureDetector(
+              onTap: () {
+                Provider.of<ZCLUgcPicDetailNotifier>(context, listen: false).id = data.id.toString();
+                Navigator.of(context).pushNamed(ZCLUgcPicDetailPage.routeName);
+              },
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Positioned.fill(child: Image.network(data.urls!.first, fit: BoxFit.fill)),
+                  data.urls!.length <= 1 ? Container() :
+                  Positioned(
+                    top: 10.px,
+                    right: 10.px,
+                    child: Container(
+                      color: Colors.black.withOpacity(0.3),
+                      child: Text("+${data.urls!.length - 1}", style: Theme.of(context).textTheme.headline3!.copyWith(color: Colors.white)),
+                    ),
                   ),
-                ),
-                Text("+${data.urls!.length - 4}", style: Theme.of(context).textTheme.headline3!.copyWith(color: Colors.white)),
-              ],));
-          }
-          return MapEntry(key, Image.network(value, fit: BoxFit.fill,));
-        }).values.map((e) => GestureDetector(onTap: () {
-          Provider.of<ZCLUgcPicDetailNotifier>(context, listen: false).id = data.id.toString();
-          Navigator.of(context).pushNamed(ZCLUgcPicDetailPage.routeName);
-        }, child: e)).toList() :
-        data.urls!.asMap().map((key, value) {
-          return MapEntry(key, Image.network(value, fit: BoxFit.fill));
-        }).values.map((e) => GestureDetector(onTap: () {
-          Provider.of<ZCLUgcPicDetailNotifier>(context, listen: false).id = data.id.toString();
-          Navigator.of(context).pushNamed(ZCLUgcPicDetailPage.routeName);
-        }, child: e)).toList(),
-      ),
+                ],),
+            )
+            // child: GridView.count(
+            //   physics: NeverScrollableScrollPhysics(),
+            //   shrinkWrap: true,
+            //   crossAxisCount: data.urls!.length == 1 ? 1 : 2,
+            //   mainAxisSpacing: 3.px,
+            //   crossAxisSpacing: 3.px,
+            //   childAspectRatio: 3/2,
+            //   children: data.urls!.length > 4 ? data.urls!.sublist(0, 4).asMap().map((key, value) {
+            //     if (key == 3) {
+            //       return MapEntry(key, Stack(
+            //         alignment: Alignment.center,
+            //         children: [
+            //           Positioned.fill(child: Image.network(value, fit: BoxFit.fill)),
+            //           Positioned.fill(
+            //             child: Container(
+            //               color: Colors.black.withOpacity(0.3),
+            //             ),
+            //           ),
+            //           Text("+${data.urls!.length - 4}", style: Theme.of(context).textTheme.headline3!.copyWith(color: Colors.white)),
+            //         ],));
+            //     }
+            //     return MapEntry(key, Image.network(value, fit: BoxFit.fill,));
+            //   }).values.map((e) => GestureDetector(onTap: () {
+            //     Provider.of<ZCLUgcPicDetailNotifier>(context, listen: false).id = data.id.toString();
+            //     Navigator.of(context).pushNamed(ZCLUgcPicDetailPage.routeName);
+            //   }, child: e)).toList() :
+            //   data.urls!.asMap().map((key, value) {
+            //     return MapEntry(key, Image.network(value, fit: BoxFit.fill));
+            //   }).values.map((e) => GestureDetector(onTap: () {
+            //     Provider.of<ZCLUgcPicDetailNotifier>(context, listen: false).id = data.id.toString();
+            //     Navigator.of(context).pushNamed(ZCLUgcPicDetailPage.routeName);
+            //   }, child: e)).toList(),
+            // ),
+          ),
+        ),
+      ],
     );
   }
 
