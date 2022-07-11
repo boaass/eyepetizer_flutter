@@ -37,6 +37,7 @@ dependencies:
   url_launcher: ^6.0.10
   flutter_inappwebview: ^3.0.0
   inview_notifier_list: ^3.0.0
+  shared_preferences: ^2.0.5
 
 dev_dependencies:
   flutter_test:

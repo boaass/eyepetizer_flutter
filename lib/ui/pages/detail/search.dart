@@ -1,8 +1,10 @@
 import 'package:eyepetizer/core/viewmodel/search_recommend_view_model.dart';
+import 'package:eyepetizer/ui/shared/size_fit.dart';
 import 'package:eyepetizer/ui/widgets/card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:eyepetizer/core/extention/num_extention.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class ZCLSearchPage extends StatefulWidget {
@@ -21,6 +23,8 @@ class _ZCLSearchPageState extends State<ZCLSearchPage> with TickerProviderStateM
   TabController? _tabController;
   int _currentPageIndex = 0;
   bool _isDeleteBtnShow = false;
+  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  final SEARCH_HISTORY_KEY = "search_history_key";
 
   @override
   void initState() {
@@ -83,6 +87,7 @@ class _ZCLSearchPageState extends State<ZCLSearchPage> with TickerProviderStateM
     Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        _buildSearchHistory(),
         _buildRecommendSearch(searchRecommendVM),
         _buildBody(searchRecommendVM),
       ],
@@ -211,6 +216,48 @@ class _ZCLSearchPageState extends State<ZCLSearchPage> with TickerProviderStateM
     );
   }
 
+  _buildSearchHistory() {
+    Future<List<String>> searchWords = _prefs.then((SharedPreferences preferences) {
+      return preferences.getStringList(SEARCH_HISTORY_KEY) ?? [];
+    });
+    return FutureBuilder(
+      future: searchWords,
+      builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+        return snapshot.data == null || snapshot.data!.length == 0 ? Container() :
+        Container(
+          margin: EdgeInsets.only(top: 10.px),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("搜索历史", style: Theme.of(context).textTheme.headline3,),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _changeSearchCache([]);
+                      });
+                    },
+                    child: Text("删除", style: Theme.of(context).textTheme.headline3!.copyWith(color: Colors.lightBlue))
+                  ),
+                ],
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 20.px),
+                child: Wrap(
+                  spacing: 20.px,
+                  runSpacing: 10.px,
+                  children: snapshot.data!.map<Widget>((e) => _buildRecommendSearchItem(e)).toList(),
+                ),
+              )
+            ],
+          )
+        );
+      }
+    );
+  }
+
   _buildRecommendSearch(ZCLSearchRecommendViewModel vm) {
     return Container(
       margin: EdgeInsets.only(top: 10.px),
@@ -264,9 +311,25 @@ class _ZCLSearchPageState extends State<ZCLSearchPage> with TickerProviderStateM
     );
   }
 
-  _changeToSearchResultPage() {
+  _changeToSearchResultPage() async {
+    if (_textEditingController.value.text.isEmpty) {
+      return;
+    }
+
+    final SharedPreferences prefs = await _prefs;
+    final List<String> searchWords = prefs.getStringList(SEARCH_HISTORY_KEY) ?? [];
+    if (!searchWords.contains(_textEditingController.value.text)) {
+      searchWords.add(_textEditingController.value.text);
+      prefs.setStringList(SEARCH_HISTORY_KEY, searchWords);
+    }
+
     ZCLSearchRecommendViewModel vm = Provider.of<ZCLSearchRecommendViewModel>(context, listen: false);
     vm.isSearchPage = false;
     vm.changeToSearchResultPage(_textEditingController.value.text);
+  }
+
+  _changeSearchCache(List<String> newWords) async {
+    final SharedPreferences prefs = await _prefs;
+    prefs.setStringList(SEARCH_HISTORY_KEY, newWords);
   }
 }
