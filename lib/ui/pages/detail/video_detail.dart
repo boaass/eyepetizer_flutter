@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:eyepetizer/core/extention/num_extention.dart';
 import 'package:date_format/date_format.dart';
 import 'package:eyepetizer/core/extention/num_extention.dart';
+import 'package:video_player/video_player.dart';
 
 
 class ZCLVideoDetailPage extends StatefulWidget {
@@ -27,6 +28,7 @@ class ZCLVideoDetailPage extends StatefulWidget {
 class _ZCLVideoDetailPageState extends State<ZCLVideoDetailPage> {
 
   ScrollController _scrollController = ScrollController();
+  VideoPlayerController? _videoPlayerController;
   //顶部偏移量
   double _topMargin = 0;
 
@@ -58,6 +60,7 @@ class _ZCLVideoDetailPageState extends State<ZCLVideoDetailPage> {
   void dispose() {
     _scrollController.removeListener(_listener);
     _scrollController.dispose();
+    _videoPlayerController?.dispose();
     super.dispose();
   }
 
@@ -66,60 +69,67 @@ class _ZCLVideoDetailPageState extends State<ZCLVideoDetailPage> {
     return Scaffold(
       body: Consumer<ZCLVideoDetailViewModel>(
         builder: (ctx, videoDetailVM, child) {
-          return (videoDetailVM.videoBeanModel == null || videoDetailVM.videoRelatedModel == null || videoDetailVM.videoReplyModel == null) ?
-          Container() :
-          SafeArea(
-            child: Container( // 背景颜色渐变
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.black87, Colors.black54],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight
-                )
-              ),
-              child: Column(
-                children: [
-                  KYChewieVideoWidget(playUrl: (videoDetailVM.videoBeanModel!.playInfo != null && videoDetailVM.videoBeanModel!.playInfo!.length != 0) ? videoDetailVM.videoBeanModel!.playInfo!.first.url! : (videoDetailVM.videoBeanModel!.playUrl ?? "")),
-                  _buildListViewTitle(_topMargin),
-                  Expanded( // 解决 ListView 滚动范围问题
-                    child: Listener(
-                      onPointerUp: _onPointerUp,
-                      child: ListView.separated(
-                        physics: BouncingScrollPhysics(),
-                        controller: _scrollController,
-                        shrinkWrap: true,
-                        itemCount: 2 + (videoDetailVM.videoRelatedModel!.itemList?.length ?? 0) + (videoDetailVM.videoReplyModel!.itemList?.length ?? 0) + 1,
-                        itemBuilder: (ctx, index) {
-                          if (index == 0) {
-                            return _buildVideoDetailContent(videoDetailVM);
-                          } else if (index == 1) {
-                            return _buildAuthorItem(videoDetailVM);
-                          } else if (index >= 2 && index < (videoDetailVM.videoRelatedModel!.itemList?.length ?? 0) + 2) {
-                            return _buildSmallVideoItem(videoDetailVM.videoRelatedModel!.itemList![index-2]);
-                          }  else if ((index >= (videoDetailVM.videoRelatedModel!.itemList?.length ?? 0) + 2) && (index < (videoDetailVM.videoRelatedModel!.itemList?.length ?? 0) + 2 + (videoDetailVM.videoReplyModel!.itemList?.length ?? 0))) {
-                            return _buildReplyItem(videoDetailVM.videoReplyModel!.itemList![index - (videoDetailVM.videoRelatedModel!.itemList?.length ?? 0) - 2]);
-                          } else {
-                            return (videoDetailVM.videoReplyModel?.nextPageUrl != null && videoDetailVM.videoReplyModel?.nextPageUrl != "") ? Container() :
-                            Container(
-                              margin: EdgeInsets.only(bottom: 20.px),
-                              alignment: Alignment.center,
-                              child: Text("-The End-", style: Theme.of(context).textTheme.headline3!.copyWith(color: Colors.white, fontFamily: "Lobster"),),
-                            );
-                          }
-                        },
-                        separatorBuilder: (ctx, index) {
-                          if (index == 1 || index == 0) {
-                            return Container();
-                          }
-                          return Container(height: 20.px,);
-                        },
+
+          if (videoDetailVM.videoBeanModel == null || videoDetailVM.videoRelatedModel == null || videoDetailVM.videoReplyModel == null) {
+            return Container();
+          } else {
+            final url = (videoDetailVM.videoBeanModel!.playInfo != null && videoDetailVM.videoBeanModel!.playInfo!.length != 0) ? videoDetailVM.videoBeanModel!.playInfo!.first.url! : (videoDetailVM.videoBeanModel!.playUrl ?? "");
+            _videoPlayerController = VideoPlayerController.network(url);
+            return SafeArea(
+              child: Container( // 背景颜色渐变
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [Colors.black87, Colors.black54],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight
+                    )
+                ),
+                child: Column(
+                  children: [
+                    KYChewieVideoWidget(playUrl: url, videoPlayerController: _videoPlayerController!,),
+                    _buildListViewTitle(_topMargin),
+                    Expanded( // 解决 ListView 滚动范围问题
+                      child: Listener(
+                        onPointerUp: _onPointerUp,
+                        child: ListView.separated(
+                          physics: BouncingScrollPhysics(),
+                          controller: _scrollController,
+                          shrinkWrap: true,
+                          itemCount: 2 + (videoDetailVM.videoRelatedModel!.itemList?.length ?? 0) + (videoDetailVM.videoReplyModel!.itemList?.length ?? 0) + 1,
+                          itemBuilder: (ctx, index) {
+                            if (index == 0) {
+                              return _buildVideoDetailContent(videoDetailVM);
+                            } else if (index == 1) {
+                              return _buildAuthorItem(videoDetailVM);
+                            } else if (index >= 2 && index < (videoDetailVM.videoRelatedModel!.itemList?.length ?? 0) + 2) {
+                              return _buildSmallVideoItem(videoDetailVM.videoRelatedModel!.itemList![index-2]);
+                            }  else if ((index >= (videoDetailVM.videoRelatedModel!.itemList?.length ?? 0) + 2) && (index < (videoDetailVM.videoRelatedModel!.itemList?.length ?? 0) + 2 + (videoDetailVM.videoReplyModel!.itemList?.length ?? 0))) {
+                              return _buildReplyItem(videoDetailVM.videoReplyModel!.itemList![index - (videoDetailVM.videoRelatedModel!.itemList?.length ?? 0) - 2]);
+                            } else {
+                              return (videoDetailVM.videoReplyModel?.nextPageUrl != null && videoDetailVM.videoReplyModel?.nextPageUrl != "") ? Container() :
+                              Container(
+                                margin: EdgeInsets.only(bottom: 20.px),
+                                alignment: Alignment.center,
+                                child: Text("-The End-", style: Theme.of(context).textTheme.headline3!.copyWith(color: Colors.white, fontFamily: "Lobster"),),
+                              );
+                            }
+                          },
+                          separatorBuilder: (ctx, index) {
+                            if (index == 1 || index == 0) {
+                              return Container();
+                            }
+                            return Container(height: 20.px,);
+                          },
+                        ),
                       ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
-            ),
-          );
+            );
+          }
+
+
         },
       ),
     );
@@ -194,8 +204,9 @@ class _ZCLVideoDetailPageState extends State<ZCLVideoDetailPage> {
   _buildAuthorItem(ZCLVideoDetailViewModel videoDetailVM) {
     return GestureDetector(
       onTap: () {
+        _videoPlayerController?.pause();
         Provider.of<ZCLUserCenterNotifier>(context, listen: false).link = videoDetailVM.videoBeanModel?.author?.id?.toString() ?? "";
-        Navigator.of(context).pushNamed(ZCLUserCenterPage.routeName);
+        Navigator.of(context).pushNamed(ZCLUserCenterPage.routeName).then((value) => _videoPlayerController?.play());
       },
       child: Container(
         decoration: BoxDecoration(
@@ -357,8 +368,9 @@ class _ZCLVideoDetailPageState extends State<ZCLVideoDetailPage> {
                         color: Color.fromRGBO(0, 0, 0, .1),
                         child: ListTile(
                           onTap: () {
+                            _videoPlayerController?.pause();
                             Provider.of<ZCLUserCenterNotifier>(context, listen: false).link = item.data!.parentReply!.user!.uid!.toString();
-                            Navigator.of(context).pushNamed(ZCLUserCenterPage.routeName);
+                            Navigator.of(context).pushNamed(ZCLUserCenterPage.routeName).then((value) => _videoPlayerController?.play());
                           },
                           leading: CircleAvatar(foregroundImage: NetworkImage(item.data!.parentReply!.user!.avatar!),),
                           title: Text(item.data!.parentReply!.user!.nickname!, style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis),

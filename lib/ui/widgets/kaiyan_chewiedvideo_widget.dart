@@ -5,10 +5,11 @@ import 'package:video_player/video_player.dart';
 
 
 class KYChewieVideoWidget extends StatefulWidget {
-  const KYChewieVideoWidget({Key? key, required this.playUrl}) : super(key: key);
+  const KYChewieVideoWidget({Key? key, required this.playUrl, required this.videoPlayerController}) : super(key: key);
 
   final String playUrl;
   final double aspectRatio = 3/2;
+  final VideoPlayerController videoPlayerController;
 
   @override
   _KYChewieVideoWidgetState createState() => _KYChewieVideoWidgetState();
@@ -16,16 +17,16 @@ class KYChewieVideoWidget extends StatefulWidget {
 
 class _KYChewieVideoWidgetState extends State<KYChewieVideoWidget> {
 
-  late VideoPlayerController _videoPlayerController;
+  // late VideoPlayerController _videoPlayerController;
   late ChewieController _chewieController;
 
   @override
   void initState() {
     super.initState();
 
-    _videoPlayerController = VideoPlayerController.network(widget.playUrl);
+    // _videoPlayerController = VideoPlayerController.network(widget.playUrl);
     _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController,
+      videoPlayerController: widget.videoPlayerController,
       autoPlay: true,
       aspectRatio: widget.aspectRatio,
       customControls: KYMaterialControls()
@@ -34,7 +35,7 @@ class _KYChewieVideoWidgetState extends State<KYChewieVideoWidget> {
 
   @override
   void dispose() {
-    _videoPlayerController.dispose();
+    // _videoPlayerController.dispose();
     _chewieController.dispose();
     super.dispose();
   }
