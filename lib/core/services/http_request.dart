@@ -51,9 +51,6 @@ class HttpRequest {
     // 2. 发送网络请求
     try {
       Response response = await dio.request(url, data: data, queryParameters: params, options: option);
-      if (HttpConfig.PHPSESSID.length == 0) {
-        HttpConfig.PHPSESSID = response.headers.value("Set-Cookie").split(";").first.split("=").last;
-      }
       return response.data;
     } on DioError catch (e) {
       return Future.error(e);

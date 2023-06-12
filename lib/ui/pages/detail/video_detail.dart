@@ -86,7 +86,7 @@ class _ZCLVideoDetailPageState extends State<ZCLVideoDetailPage> {
                 ),
                 child: Column(
                   children: [
-                    KYChewieVideoWidget(playUrl: url, videoPlayerController: _videoPlayerController!,),
+                    Expanded(child: KYChewieVideoWidget(playUrl: url, videoPlayerController: _videoPlayerController!,),),
                     _buildListViewTitle(_topMargin),
                     Expanded( // 解决 ListView 滚动范围问题
                       child: Listener(

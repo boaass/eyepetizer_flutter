@@ -21,6 +21,17 @@ import 'package:provider/provider.dart';
 import 'core/viewmodel/discovery_view_model.dart';
 
 main() {
+  ErrorWidget.builder = (FlutterErrorDetails flutterErrorDetails) {
+    print(flutterErrorDetails.toString());
+    return Material(
+      child: Center(
+        child: Container(
+          child: Text("出现错误了~"),
+        ),
+      ),
+      // ),
+    );
+  };
   runApp(
     MultiProvider(
       providers: [
@@ -68,6 +79,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ZCLSizeFit.initialize();
+    //缓存个数 100
+    PaintingBinding.instance!.imageCache!.maximumSize=100;
+  //缓存大小 50m
+    PaintingBinding.instance!.imageCache!.maximumSizeBytes= 50 << 20;
+
     return MaterialApp(
       // title: "eyepetizer",
       theme: ZCLAppTheme.norTheme,
